@@ -1,0 +1,19 @@
+{
+  "name": "merngboilerplate",
+  "version": "1.0.0",
+  "description": "server side boilerplate for a MERNG stack application",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bryan Jastrzembski",
+  "license": "ISC",
+  "dependencies": {
+    "apollo-server-express": "^2.25.2",
+    "bcrypt": "^5.0.1",
+    "express": "^4.17.1",
+    "graphql": "^15.5.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.13.3"
+  }
+}
