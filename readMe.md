@@ -8,18 +8,35 @@ updated without much versioning control; so if you stumble on this boiler and li
 suggest you clone the repo and keep a copy somewhere else or just keep up with these docs.. or
 change it. Make It better. Just saving time.
 
+<br>
+
 ### Versions
 
 The front and back end package versions might break with the latest versions of dependancies. Update
 a package at the risk of something not working. I will try to keep this to date best I can.
+
+<br>
 
 ### Git
 
 Remove the `.git` folder from the boiler root folder. ` git init` your own git in there or create
 one inside of the `server` and `client` folders respectively.
 
+<br>
+
+### Core Tech Versions
+
+-   `react v17.0.2`
+-   `graphql v15.6.1`
+-   `express v4.17.1`
+-   `node v14.9.0`
+
+<br>
+
 ### Other Tech
 
+-   `@apollo/client v3.3.21`
+-   `apollo-link-context v1.0.20`
 -   _Apollo Server_: Used on client and server to impliment `GraphQL`
 -   _MongoDB Atlas_: hosting for Mongo DB
 -   _Sass_: I use sass modules in each component; but also like to manage a global sass folder for
@@ -34,17 +51,16 @@ one inside of the `server` and `client` folders respectively.
 
 ---
 
-# Front-End
+# Client Side
 
 ## **Component Directories**
 
-All concerns taht are separated into folder structures may have be as elaborate as you want as long
-as you map the `index.js` file of that directory to that file and export it. This makes it
-easy/cleaner to import a lot of stuff from a directory into a file,
+All concerns are separated into folder structures each containing an `index` file. This file acts as
+a directory aggregating and exporting all files that directoy should be exporting.
 
 ### Example
 
-> Example folder structure
+> Folder Structure
 
 ```
     - components/
@@ -57,21 +73,19 @@ easy/cleaner to import a lot of stuff from a directory into a file,
       |_ index.js
 ```
 
-> _componentA.jsx_
+> _ComponentA.jsx_
 
 ```
     import React from 'react;
-
     export default function ComponentA() => some jsx stuff
 ```
 
 <br>
 
-> _componentB.jsx_
+> _ComponentB.jsx_
 
 ```
     import React from 'react;
-
     export default function ComponentB() => some jsx stuff
 ```
 
@@ -101,10 +115,13 @@ easy/cleaner to import a lot of stuff from a directory into a file,
 
 <br>
 
-## **config.js file**
+## **CONFIG**
 
--   `TOKEN_TITLE`: The front end auth stores a json web token in local storage. You can set this
-    variable to name that token whatever you want in local storage.
+> `/client/src/config.js`
+
+-   `TOKEN_TITLE`: Set global variable for token label. Default: `jwtToken`
+-   `GQL_TESTING_SERVER_URL`:
+-   `GQL_SERVER_URL`:
 
 <br>
 
@@ -163,3 +180,65 @@ sass files are separated into partials and managed by the `index.scss` files in 
         |_ index.scss
       |_ index.scss
 ```
+
+<br>
+
+---
+
+# Server Side
+
+## **GraphQL**
+
+### Resolvers
+
+All resolvers categorized into separate files then aggregated into the `index.js` file in the
+`resolvers` directory.
+
+<br>
+
+> `server/graphql/resolvers/users.js`
+
+```
+module.exports = {
+	Query: {
+		async getUser(_, { userId }) {
+			{...}
+		},
+		async getUsers() {
+			{...}
+		},
+	},
+	Mutation: {
+		async login(_, { loginInput: { email, password } }) {
+			{...}
+		},
+		async register(_, { registerInput: {  email, password, confirmPassword } }) {
+			{...}
+		},
+	},
+};
+
+```
+
+<br>
+
+> `server/graphql/resolvers/index.js`
+
+```
+const userResolvers = require('./users');
+
+module.exports = {
+	Query: {
+		...userResolvers.Query,
+	},
+	Mutation: {
+		...userResolvers.Mutation,
+	},
+};
+```
+
+<br>
+
+---
+
+# Building On User Template
