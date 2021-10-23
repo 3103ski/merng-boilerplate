@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 
 import { useForm } from '../../util/hooks';
 import { AuthContext } from '../../context/auth';
+import { Loader } from '../../components';
 
 export default function LoginForm({ history }) {
 	const authContext = useContext(AuthContext);
@@ -27,26 +28,30 @@ export default function LoginForm({ history }) {
 		login();
 	}
 
-	return loading ? (
-		<h1>...loading</h1>
-	) : (
+	return (
 		<Form onSubmit={onSubmit}>
-			<Form.Input
-				type='email'
-				onChange={onChange}
-				value={values.email}
-				name='email'
-				placeholder='Email'
-			/>
-			<Form.Input
-				type='password'
-				onChange={onChange}
-				value={values.password}
-				name='password'
-				placeholder='Password'
-			/>
+			{loading ? (
+				<Loader loadingText='Logging In' />
+			) : (
+				<>
+					<Form.Input
+						type='email'
+						onChange={onChange}
+						value={values.email}
+						name='email'
+						placeholder='Email'
+					/>
+					<Form.Input
+						type='password'
+						onChange={onChange}
+						value={values.password}
+						name='password'
+						placeholder='Password'
+					/>
+				</>
+			)}
 
-			<Button type='submit' primary>
+			<Button type='submit' primary loading={loading}>
 				Login
 			</Button>
 		</Form>

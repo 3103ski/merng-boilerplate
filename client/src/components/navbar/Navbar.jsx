@@ -50,7 +50,17 @@ export default function Navbar() {
 					/>
 				</>
 			) : (
-				<Menu.Item name='logout' position='right' onClick={logout} as={Link} to='/login' />
+				<>
+					<Menu.Item
+						active={activeItem === 'settings'}
+						name='settings'
+						position='right'
+						onClick={handleItemClick}
+						as={Link}
+						to='/user-settings'
+					/>
+					<Menu.Item name='logout' onClick={logout} as={Link} to='/login' />
+				</>
 			)}
 		</Menu>
 	);

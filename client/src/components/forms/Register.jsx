@@ -6,6 +6,7 @@ import gql from 'graphql-tag';
 
 import { useForm } from '../../util/hooks';
 import { AuthContext } from '../../context/auth';
+import { Loader } from '../../components/';
 
 export default function RegisterUserForm({ history }) {
 	const authContext = useContext(AuthContext);
@@ -29,7 +30,7 @@ export default function RegisterUserForm({ history }) {
 	}
 
 	return loading ? (
-		<h1>...loading</h1>
+		<Loader loadingText='Registering User' />
 	) : (
 		<Form onSubmit={onSubmit}>
 			<Form.Input

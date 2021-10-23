@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import { LandingPage, RegisterPage, LoginPage, DashboardPage } from './pages';
+import { LandingPage, RegisterPage, LoginPage, DashboardPage, UserSettingsPage } from './pages';
 import { Navbar } from './components';
 
 import AuthRoute from './util/AuthRoute.jsx';
@@ -18,6 +18,7 @@ function App() {
 				<Route exact path={'/login'} component={LoginPage} />
 				<Route exact path={'/register'} component={RegisterPage} />
 				<AuthRoute exact path={'/user-dash'} component={DashboardPage} />
+				<AuthRoute exact path={'/user-settings'} component={UserSettingsPage} />
 			</Router>
 		</AuthProvider>
 	);

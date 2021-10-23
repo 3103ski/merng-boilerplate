@@ -8,6 +8,7 @@ module.exports = gql`
 		username: String!
 		createdAt: String!
 	}
+
 	input RegisterInput {
 		email: String!
 		password: String!
@@ -19,6 +20,16 @@ module.exports = gql`
 		password: String!
 	}
 
+	input UpdatePasswordInput {
+		password: String!
+		newPassword: String!
+		confirmNewPassword: String!
+	}
+
+	input UpdateUserInput {
+		email: String
+	}
+
 	type Query {
 		getUser(userId: ID!): User
 		getUsers: [User]
@@ -28,5 +39,9 @@ module.exports = gql`
 		# Auth
 		register(registerInput: RegisterInput): User!
 		login(loginInput: LoginInput): User!
+
+		# User
+		updatePassword(updatePasswordInput: UpdatePasswordInput): User
+		updateUser(updateUserInput: UpdateUserInput): User
 	}
 `;

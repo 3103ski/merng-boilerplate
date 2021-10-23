@@ -1,7 +1,7 @@
 const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const { UserInputError } = require('apollo-server-express');
-// const checkAuth = require('../../util/checkAuth');
+const checkAuth = require('../../util/checkAuth');
 const jwt = require('jsonwebtoken');
 
 const { SERCRET_KEY } = require('../../config');
@@ -60,6 +60,47 @@ module.exports = {
 				id: user._id,
 				token,
 			};
+		},
+		async updatePassword(
+			_,
+			{ updatePasswordInput: { password, newPassword, confirmNewPassword } },
+			context
+		) {
+			const validatedUser = checkAuth(context);
+
+			if (validatedUser) {
+				const user = await User.findById(validatedUser.id);
+				const match = await bcrypt.compare(password, user.password);
+
+				if (!match) {
+					throw new UserInputError('Wrong Credentials', {
+						errors: {
+							password: 'The password you entered for this user is not correct',
+						},
+					});
+				} else {
+					if (newPassword === confirmNewPassword) {
+						const newPasswordEncrypted = await bcrypt.hash(newPassword, 12);
+
+						user.password = newPasswordEncrypted;
+
+						const res = await user.save();
+						const token = generateToken(res);
+
+						return {
+							...res._doc,
+							id: res._id,
+							token,
+						};
+					} else {
+						throw new UserInputError('Passwords do not match', {
+							errors: {
+								confirmNewPassword: 'The passwords you entered do not match',
+							},
+						});
+					}
+				}
+			}
 		},
 		async register(_, { registerInput: { email, password, confirmPassword } }) {
 			const user = await User.findOne({ username: email });
