@@ -1,11 +1,12 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
-import 'semantic-ui-css/semantic.min.css';
-
 import { LandingPage, RegisterPage, LoginPage, DashboardPage } from './pages';
-import AuthRoute from './util/AuthRoute.jsx';
 import { Navbar } from './components';
+
+import AuthRoute from './util/AuthRoute.jsx';
 import { AuthProvider } from './context/auth';
+
+import 'semantic-ui-css/semantic.min.css';
 import './App.scss';
 
 function App() {

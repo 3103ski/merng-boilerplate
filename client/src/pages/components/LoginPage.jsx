@@ -2,12 +2,14 @@ import React from 'react';
 
 import { Container } from 'semantic-ui-react';
 
-import { LoginForm } from '../../components';
+import { LoginForm, BasicCard } from '../../components';
 
 export default function LoginView(props) {
 	return (
 		<Container>
-			<LoginForm history={props.history} />
+			<BasicCard centerSelf title='Login'>
+				<LoginForm history={props.history} />
+			</BasicCard>
 		</Container>
 	);
 }

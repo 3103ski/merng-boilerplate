@@ -1,7 +1,7 @@
 const User = require('../../models/User');
 const bcrypt = require('bcrypt');
 const { UserInputError } = require('apollo-server-express');
-const checkAuth = require('../../util/checkAuth');
+// const checkAuth = require('../../util/checkAuth');
 const jwt = require('jsonwebtoken');
 
 const { SERCRET_KEY } = require('../../config');
@@ -61,13 +61,13 @@ module.exports = {
 				token,
 			};
 		},
-		async register(_, { registerInput: { displayName, email, password, confirmPassword } }) {
+		async register(_, { registerInput: { email, password, confirmPassword } }) {
 			const user = await User.findOne({ username: email });
 
 			if (user) {
-				throw new UserInputError('Username already in use', {
+				throw new UserInputError('Email already registered', {
 					errors: {
-						username: 'This username is taken',
+						email: 'This email already has an account',
 					},
 				});
 			}

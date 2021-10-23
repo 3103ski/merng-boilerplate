@@ -18,6 +18,7 @@ module.exports = gql`
 		email: String!
 		password: String!
 	}
+
 	type Query {
 		getUser(userId: ID!): User
 		getUsers: [User]

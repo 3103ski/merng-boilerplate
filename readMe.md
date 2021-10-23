@@ -51,6 +51,26 @@ one inside of the `server` and `client` folders respectively.
 
 ---
 
+# Getting Started
+
+1. Go to MongoDB.com and create an `Atlas cluster`. Select that cluster and choose "connect app",
+   then use that link in `server/config.js`. If you are not using Atlas, you can also assign any URL
+   to a mongodb database to the `MONGODB` config variable and it should work out.
+2. If you do not have `nodemon` installed globally on your machine, you can install it or change the
+   start script in `server/package.json` from `nodemon index.js` to `node index.js`
+3. Run `npm start` in both the **server & client** directories.
+4. Create a git repos for both server and client
+5. I user **Netlify** for my client repos and **Heroku** for server; use those or whatever you
+   prefer, then add your production server URL to the `GQL_SERVER_URL` variable in
+   `/client/src/config.js`
+6. By default, `/client/src/ApolloProvider.jsx` is pointed to the `GQL_TESTING_SERVER_URL` config
+   variable, switch it to `GQL_SERVER_URL` anytime you are not making changes to a local version of
+   the server.
+
+<br>
+
+---
+
 # Client Side
 
 ## **Component Directories**
@@ -120,8 +140,11 @@ a directory aggregating and exporting all files that directoy should be exportin
 > `/client/src/config.js`
 
 -   `TOKEN_TITLE`: Set global variable for token label. Default: `jwtToken`
--   `GQL_TESTING_SERVER_URL`:
--   `GQL_SERVER_URL`:
+-   `GQL_TESTING_SERVER_URL`: default value is _http://localhost:5000/graphql_
+-   `GQL_SERVER_URL`: URL for production server
+
+> **_make sure to switch to `GQL_SERVER_URL` inside of `client/src/ApolloProvider.jsx` when not
+> working on local version_**
 
 <br>
 
