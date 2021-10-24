@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import { Form, Button } from 'semantic-ui-react';
 import { useMutation } from '@apollo/client';
@@ -7,6 +7,7 @@ import { useForm, useGQLFormErrors } from '../../hooks';
 import { AuthContext } from '../../context/auth';
 import { Loader, FormErrors } from '../../components/';
 import { UPDATE_PASSWORD } from '../../gql/';
+import { handleOnEnter } from '../../util/helperFunctions.js';
 
 export default function UpdateUserPasswordForm({ callback }) {
 	const authContext = useContext(AuthContext);
@@ -36,32 +37,44 @@ export default function UpdateUserPasswordForm({ callback }) {
 		updateUserPassword();
 	}
 
-	return loading ? (
-		<Loader loadingText='Updating Password' />
-	) : (
+	const updatePasswordEnter = (e) => handleOnEnter(e, updatePasswordHandler);
+
+	useEffect(() => {
+		const form = document.getElementById('form_update_password');
+		form.addEventListener('keydown', updatePasswordEnter);
+		return () => form.removeEventListener('keydown', updatePasswordEnter);
+	});
+
+	return (
 		<>
-			<Form onSubmit={onSubmit}>
-				<Form.Input
-					type='password'
-					onChange={onChange}
-					value={values.password}
-					name='password'
-					placeholder='Current Password'
-				/>
-				<Form.Input
-					type='password'
-					onChange={onChange}
-					value={values.newPassword}
-					name='newPassword'
-					placeholder='New Password'
-				/>
-				<Form.Input
-					type='password'
-					onChange={onChange}
-					value={values.confirmNewPassword}
-					name='confirmNewPassword'
-					placeholder='Confirm New Password'
-				/>
+			<Form id='form_update_password' onSubmit={onSubmit}>
+				{loading ? (
+					<Loader loadingText='Updating Password' />
+				) : (
+					<>
+						<Form.Input
+							type='password'
+							onChange={onChange}
+							value={values.password}
+							name='password'
+							placeholder='Current Password'
+						/>
+						<Form.Input
+							type='password'
+							onChange={onChange}
+							value={values.newPassword}
+							name='newPassword'
+							placeholder='New Password'
+						/>
+						<Form.Input
+							type='password'
+							onChange={onChange}
+							value={values.confirmNewPassword}
+							name='confirmNewPassword'
+							placeholder='Confirm New Password'
+						/>
+					</>
+				)}
 				<Button onClick={callback}>Cancel</Button>
 				<Button onClick={updateUserPassword} type='submit' primary>
 					Update Password

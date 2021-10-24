@@ -8,3 +8,9 @@ export const updateObj = (obj, newData) => {
 		...newData,
 	};
 };
+
+export const handleOnEnter = (e, callback) => {
+	if (e.key === 'Enter') {
+		callback();
+	}
+};

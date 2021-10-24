@@ -44,3 +44,13 @@ export const UPDATE_PASSWORD = gql`
 		}
 	}
 `;
+
+export const UPDATE_USER = gql`
+	mutation updateUser($email: String) {
+		updateUser(updateUserInput: { email: $email }) {
+			id
+			email
+			createdAt
+		}
+	}
+`;

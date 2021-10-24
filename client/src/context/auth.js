@@ -19,8 +19,12 @@ if (localStorage.getItem(TOKEN_TITLE)) {
 
 const AuthContext = createContext(initialState);
 
-const authReducer = (state, { type, payload }) => {
+const authReducer = (state, { type, payload, updatedUser }) => {
 	switch (type) {
+		case 'UPDATE':
+			return updateObj(state, {
+				user: updatedUser,
+			});
 		case 'LOGIN':
 			return updateObj(state, {
 				user: payload,
@@ -46,12 +50,18 @@ const AuthProvider = (props) => {
 		dispatch({ type: 'LOGOUT' });
 	};
 
+	const updateUserInfo = async (updates) => {
+		const updatedUser = await updateObj(state.user, updates);
+		dispatch({ type: 'UPDATE', updatedUser });
+	};
+
 	return (
 		<AuthContext.Provider
 			value={{
 				user: state.user,
 				login,
 				logout,
+				updateUserInfo,
 			}}
 			{...props}
 		/>

@@ -3,11 +3,12 @@ import React, { useContext, useState } from 'react';
 import { Container, Button, Grid } from 'semantic-ui-react';
 
 import { AuthContext } from '../../context/';
-import { BasicCard, FormModal, UpdatePasswordForm } from '../../components/';
+import { BasicCard, FormModal, UpdatePasswordForm, UpdateUserInfoForm } from '../../components/';
 
 export default function UserSettingsPage() {
 	const { user } = useContext(AuthContext);
 	const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
+	const [isUpdatingInfo, setIsUpdatingInfo] = useState(false);
 
 	return (
 		<Container>
@@ -25,8 +26,11 @@ export default function UserSettingsPage() {
 							</Button>
 						</Grid.Column>
 						<Grid.Column width={8}>
-							<Button size='tiny' color='teal'>
-								Update Settings
+							<Button
+								size='tiny'
+								onClick={() => setIsUpdatingInfo(true)}
+								color='teal'>
+								Update Info
 							</Button>
 						</Grid.Column>
 					</Grid.Row>
@@ -37,6 +41,13 @@ export default function UserSettingsPage() {
 				formComponent={UpdatePasswordForm}
 				isOpen={isUpdatingPassword}
 				setIsOpen={setIsUpdatingPassword}
+				size='tiny'
+			/>
+			<FormModal
+				header='UpdateInfo'
+				formComponent={UpdateUserInfoForm}
+				isOpen={isUpdatingInfo}
+				setIsOpen={setIsUpdatingInfo}
 				size='tiny'
 			/>
 		</Container>
