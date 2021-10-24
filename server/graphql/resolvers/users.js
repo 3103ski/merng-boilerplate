@@ -33,12 +33,12 @@ module.exports = {
 	},
 	Mutation: {
 		async login(_, { loginInput: { email, password } }) {
-			const user = await User.findOne({ username: email });
+			const user = await User.findOne({ email });
 
 			if (!user) {
 				throw new UserInputError('User not found', {
 					errors: {
-						email: 'No user was found with this username',
+						email: 'No user was found with this email',
 					},
 				});
 			}
@@ -95,15 +95,36 @@ module.exports = {
 					} else {
 						throw new UserInputError('Passwords do not match', {
 							errors: {
-								confirmNewPassword: 'The passwords you entered do not match',
+								newPassword: 'The passwords you entered do not match',
 							},
 						});
 					}
 				}
 			}
 		},
+		async updateUser(_, { updateUserInput }, context) {
+			const user = checkAuth(context);
+
+			if (user) {
+				if (updateUserInput.password) {
+					throw new error(
+						'You should not be using this GQL endpoint to update passwords'
+					);
+				}
+
+				await User.findByIdAndUpdate(user.id, {
+					$set: {
+						...updateUserInput,
+					},
+				});
+
+				const updatedUser = await User.findById(user.id);
+
+				return updatedUser;
+			}
+		},
 		async register(_, { registerInput: { email, password, confirmPassword } }) {
-			const user = await User.findOne({ username: email });
+			const user = await User.findOne({ email });
 
 			if (user) {
 				throw new UserInputError('Email already registered', {
@@ -118,7 +139,6 @@ module.exports = {
 
 				const newUser = new User({
 					email,
-					username: email,
 					password,
 					createdAt: new Date().toISOString(),
 				});

@@ -33,6 +33,7 @@ export default function UserSettingsPage() {
 				</Grid>
 			</BasicCard>
 			<FormModal
+				header='Update Password'
 				formComponent={UpdatePasswordForm}
 				isOpen={isUpdatingPassword}
 				setIsOpen={setIsUpdatingPassword}

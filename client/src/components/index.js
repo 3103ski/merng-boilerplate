@@ -3,6 +3,8 @@ export { default as LoginForm } from './forms/Login.jsx';
 export { default as RegisterUserForm } from './forms/Register.jsx';
 export { default as UpdatePasswordForm } from './forms/UpdatePassword.jsx';
 
+export { default as FormErrors } from './forms/FormErrors.jsx';
+
 // Layout Components
 export { default as Navbar } from './navbar/Navbar.jsx';
 

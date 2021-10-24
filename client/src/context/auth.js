@@ -19,11 +19,11 @@ if (localStorage.getItem(TOKEN_TITLE)) {
 
 const AuthContext = createContext(initialState);
 
-const authReducer = (state, action) => {
-	switch (action.type) {
+const authReducer = (state, { type, payload }) => {
+	switch (type) {
 		case 'LOGIN':
 			return updateObj(state, {
-				user: action.payload,
+				user: payload,
 			});
 		case 'LOGOUT':
 			return initialState;

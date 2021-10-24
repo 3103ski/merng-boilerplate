@@ -2,15 +2,17 @@ import React, { useContext } from 'react';
 
 import { Form, Button } from 'semantic-ui-react';
 import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
-import { useForm } from '../../util/hooks';
+import { useForm, useGQLFormErrors } from '../../hooks';
 import { AuthContext } from '../../context/auth';
-import { Loader } from '../../components';
+import { Loader, FormErrors } from '../../components';
+import { LOGIN_USER } from '../../gql/';
 
-export default function LoginForm({ history }) {
+export default function LoginForm({ history, callback }) {
 	const authContext = useContext(AuthContext);
 
+	const { errors, setFormError, clearErrors } = useGQLFormErrors();
 	const { values, onSubmit, onChange } = useForm(loginUser, {
 		email: '',
 		password: '',
@@ -19,53 +21,49 @@ export default function LoginForm({ history }) {
 	const [login, { loading }] = useMutation(LOGIN_USER, {
 		update(_, { data: { login: userData } }) {
 			authContext.login(userData);
-			history.push('/user-dash');
+
+			if (callback) callback();
+			if (history) history.push('/user-dash');
+		},
+		onError(err) {
+			setFormError(err);
 		},
 		variables: values,
 	});
 
-	function loginUser() {
+	async function loginUser() {
+		await clearErrors();
 		login();
 	}
 
 	return (
-		<Form onSubmit={onSubmit}>
-			{loading ? (
-				<Loader loadingText='Logging In' />
-			) : (
-				<>
-					<Form.Input
-						type='email'
-						onChange={onChange}
-						value={values.email}
-						name='email'
-						placeholder='Email'
-					/>
-					<Form.Input
-						type='password'
-						onChange={onChange}
-						value={values.password}
-						name='password'
-						placeholder='Password'
-					/>
-				</>
-			)}
-
-			<Button type='submit' primary loading={loading}>
-				Login
-			</Button>
-		</Form>
+		<>
+			<Form onSubmit={onSubmit}>
+				{loading ? (
+					<Loader loadingText='Logging In' />
+				) : (
+					<>
+						<Form.Input
+							type='email'
+							onChange={onChange}
+							value={values.email}
+							name='email'
+							placeholder='Email'
+						/>
+						<Form.Input
+							type='password'
+							onChange={onChange}
+							value={values.password}
+							name='password'
+							placeholder='Password'
+						/>
+					</>
+				)}
+				<Button type='submit' primary loading={loading}>
+					Login
+				</Button>
+			</Form>
+			<FormErrors errors={errors} />
+		</>
 	);
 }
-
-const LOGIN_USER = gql`
-	mutation login($email: String!, $password: String!) {
-		login(loginInput: { email: $email, password: $password }) {
-			id
-			email
-			username
-			token
-			createdAt
-		}
-	}
-`;

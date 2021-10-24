@@ -11,55 +11,32 @@ export default function Navbar() {
 
 	const handleItemClick = (_, { name }) => setActiveItem(name);
 
+	const MenuLink = ({ to, right, name, onClick }) => (
+		<Menu.Item
+			active={activeItem === name}
+			name={name}
+			position={right ? 'right' : null}
+			onClick={onClick ? onClick : handleItemClick}
+			as={Link}
+			to={to}
+		/>
+	);
+
 	return (
 		<Menu inverted>
-			<Menu.Item
-				name='landing'
-				active={activeItem === 'landing'}
-				onClick={handleItemClick}
-				as={Link}
-				to='/'
-			/>
+			<MenuLink to='/' name='landing' />
 
-			{user ? (
-				<Menu.Item
-					name='dashboard'
-					active={activeItem === 'dashboard'}
-					onClick={handleItemClick}
-					as={Link}
-					to='/user-dash'
-				/>
-			) : null}
+			{user ? <MenuLink name='dashboard' to='/user-dash' /> : null}
 
 			{!user ? (
 				<>
-					<Menu.Item
-						position='right'
-						name='login'
-						active={activeItem === 'login'}
-						onClick={handleItemClick}
-						as={Link}
-						to='/login'
-					/>
-					<Menu.Item
-						name='register'
-						active={activeItem === 'register'}
-						onClick={handleItemClick}
-						as={Link}
-						to={'/register'}
-					/>
+					<MenuLink to='/login' name='login' right />
+					<MenuLink to='/register' name='register' />
 				</>
 			) : (
 				<>
-					<Menu.Item
-						active={activeItem === 'settings'}
-						name='settings'
-						position='right'
-						onClick={handleItemClick}
-						as={Link}
-						to='/user-settings'
-					/>
-					<Menu.Item name='logout' onClick={logout} as={Link} to='/login' />
+					<MenuLink to='/user-settings' name='settings' right />
+					<MenuLink to='/login' name='logout' onClick={logout} />
 				</>
 			)}
 		</Menu>
