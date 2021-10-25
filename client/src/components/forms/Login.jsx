@@ -10,7 +10,7 @@ import { Loader, FormErrors } from '../../components';
 import { LOGIN_USER } from '../../gql/';
 
 export default function LoginForm({ history, callback }) {
-	const authContext = useContext(AuthContext);
+	const { loginSuccess } = useContext(AuthContext);
 
 	const { errors, setFormError, clearErrors } = useGQLFormErrors();
 	const { values, onSubmit, onChange } = useForm(loginUser, {
@@ -20,7 +20,7 @@ export default function LoginForm({ history, callback }) {
 
 	const [login, { loading }] = useMutation(LOGIN_USER, {
 		update(_, { data: { login: userData } }) {
-			authContext.login(userData);
+			loginSuccess(userData);
 
 			if (callback) callback();
 			if (history) history.push('/user-dash');

@@ -8,7 +8,6 @@ export default function useForm(callback, initialState = {}) {
 	};
 
 	const onSubmit = (e) => {
-		console.log('on submit heard');
 		e.preventDefault();
 		callback();
 	};

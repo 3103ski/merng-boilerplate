@@ -9,7 +9,7 @@ import { Loader, FormErrors } from '../../components/';
 import { REGISTER_USER } from '../../gql/';
 
 export default function RegisterUserForm({ history, callback }) {
-	const authContext = useContext(AuthContext);
+	const { loginSuccess } = useContext(AuthContext);
 
 	const { errors, setFormError, clearErrors } = useGQLFormErrors();
 	const { values, onSubmit, onChange } = useForm(registerUser, {
@@ -20,7 +20,7 @@ export default function RegisterUserForm({ history, callback }) {
 
 	const [addUser, { loading }] = useMutation(REGISTER_USER, {
 		update(_, { data: { register: userData } }) {
-			authContext.login(userData);
+			loginSuccess(userData);
 
 			if (callback) callback();
 			if (history) history.push('/user-dash');

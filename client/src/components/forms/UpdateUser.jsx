@@ -35,12 +35,12 @@ export default function UpdateUserInfoForm({ callback }) {
 		updateUser();
 	}
 
-	const updateUserEnter = (e) => handleOnEnter(e, updateUserInfoHandler);
+	const updateOnEnterHandler = (e) => handleOnEnter(e, updateUserInfoHandler);
 
 	useEffect(() => {
 		const form = document.getElementById('form_update_user_info');
-		form.addEventListener('keydown', updateUserEnter);
-		return () => form.removeEventListener('keydown', updateUserEnter);
+		form.addEventListener('keydown', updateOnEnterHandler);
+		return () => form.removeEventListener('keydown', updateOnEnterHandler);
 	});
 
 	return (

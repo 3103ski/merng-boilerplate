@@ -37,12 +37,12 @@ export default function UpdateUserPasswordForm({ callback }) {
 		updateUserPassword();
 	}
 
-	const updatePasswordEnter = (e) => handleOnEnter(e, updatePasswordHandler);
+	const updatePasswordOnEnterHandler = (e) => handleOnEnter(e, updatePasswordHandler);
 
 	useEffect(() => {
 		const form = document.getElementById('form_update_password');
-		form.addEventListener('keydown', updatePasswordEnter);
-		return () => form.removeEventListener('keydown', updatePasswordEnter);
+		form.addEventListener('keydown', updatePasswordOnEnterHandler);
+		return () => form.removeEventListener('keydown', updatePasswordOnEnterHandler);
 	});
 
 	return (

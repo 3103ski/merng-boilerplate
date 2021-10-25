@@ -265,3 +265,27 @@ module.exports = {
 ---
 
 # Building On User Template
+
+The foundation of the user template is super basic. You can register a new user with an email and
+password which will admit you to a protected page sample. You can update password and change login
+email in a basic settings starter.
+
+<br>
+
+## Auth Context
+
+> client/src/context/**auth.js**
+
+### Context Variables
+
+-   `user` : the login success will store a decoded version of the token here and also clear it if
+    the page loads with an expired token.
+
+### Context Methods
+
+-   `loginSuccess` : accepts a `user` that contains a token from successful login; stores token in
+    local storage and adds user data to auth context
+-   `logout` : will clear token in local storage and and remove decrypted token data from `user`
+    context variable
+-   `updateUserInfo` : will accept an `object` that contains updated user values. _Will not update
+    user password_.

@@ -39,7 +39,7 @@ const authReducer = (state, { type, payload, updatedUser }) => {
 const AuthProvider = (props) => {
 	const [state, dispatch] = useReducer(authReducer, initialState);
 
-	const login = (userData) => {
+	const loginSuccess = (userData) => {
 		localStorage.setItem(TOKEN_TITLE, userData.token);
 
 		dispatch({ type: 'LOGIN', payload: userData });
@@ -59,7 +59,7 @@ const AuthProvider = (props) => {
 		<AuthContext.Provider
 			value={{
 				user: state.user,
-				login,
+				loginSuccess,
 				logout,
 				updateUserInfo,
 			}}
