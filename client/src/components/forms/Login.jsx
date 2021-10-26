@@ -6,7 +6,7 @@ import { useMutation } from '@apollo/client';
 
 import { useForm, useGQLFormErrors } from '../../hooks';
 import { AuthContext } from '../../context/auth';
-import { Loader, FormErrors } from '../../components';
+import { Loader, FormErrors, Button as CustomButton } from '../../components';
 import { LOGIN_USER } from '../../gql/';
 
 export default function LoginForm({ history, callback }) {
@@ -62,6 +62,7 @@ export default function LoginForm({ history, callback }) {
 				<Button type='submit' primary loading={loading}>
 					Login
 				</Button>
+				<CustomButton.GoogleLoginBtn />
 			</Form>
 			<FormErrors errors={errors} />
 		</>

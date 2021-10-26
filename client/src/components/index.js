@@ -13,3 +13,4 @@ export { default as Navbar } from './navbar/Navbar.jsx';
 export { default as BasicCard } from './genericComponents/card/Card.jsx';
 export { default as Loader } from './genericComponents/loader/Loader.jsx';
 export { default as FormModal } from './genericComponents/formModal/FormModal.jsx';
+export { default as Button } from './genericComponents/button/Button.jsx';
