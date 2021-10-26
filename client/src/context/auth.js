@@ -5,6 +5,8 @@ import { TOKEN_TITLE } from '../config';
 
 const initialState = {
 	user: null,
+	errorMsg: null,
+	isLoading: false,
 };
 
 if (localStorage.getItem(TOKEN_TITLE)) {

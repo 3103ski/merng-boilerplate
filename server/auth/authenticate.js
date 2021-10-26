@@ -11,27 +11,6 @@ const ExtractJwt = require('passport-jwt').ExtractJwt;
 const FacebookTokenStrategy = require('passport-facebook-token');
 const GoogleTokenStrategy = require('passport-token-google2').Strategy;
 
-// Amazon s3 for avatar bucket
-
-// AWS.config.update({
-// 	accessKeyId: 'AKIARRLEMNTVQBYT73P7',
-// 	secretAccessKey: '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',
-// });
-
-// const s3 = new AWS.S3();
-
-// const uploadAvatar = (buffer, name, type) => {
-// 	const params = {
-// 		ACL: 'public-read',
-// 		ContentType: type.mime,
-// 		Body: buffer,
-// 		Bucket: 'ms-avatars',
-// 		Key: `${name}`,
-// 	};
-
-// 	return s3.upload(params).promise();
-// };
-
 // Local Strategies
 const User = require('../models/User.js');
 const config = require('../config.js');
