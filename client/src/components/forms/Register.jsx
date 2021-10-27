@@ -7,6 +7,7 @@ import { useForm } from '../../hooks';
 import { SERVER_URL } from '../../config';
 import { AuthContext } from '../../contexts/auth';
 import { Loader } from '../../components/';
+import { GoogleLoginButton } from './oAuthButtons/';
 
 export default function RegisterUserForm({ history, callback }) {
 	const { isLoading, authStart, authSuccess, authError } = useContext(AuthContext);
@@ -73,6 +74,12 @@ export default function RegisterUserForm({ history, callback }) {
 				<Button type='submit' primary>
 					Register New User
 				</Button>
+				<GoogleLoginButton
+					authStart={authStart}
+					authSuccess={authSuccess}
+					authError={authError}
+					history={history}
+				/>
 			</Form>
 		</>
 	);

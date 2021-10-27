@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useForm } from '../../hooks';
 import { AuthContext } from '../../contexts/auth';
 import { Loader, Button as CustomButton } from '../../components';
+import { GoogleLoginButton } from './oAuthButtons/';
 import { SERVER_URL } from '../../config';
 
 export default function LoginForm({ history, callback }) {
@@ -61,7 +62,12 @@ export default function LoginForm({ history, callback }) {
 				<Button type='submit' primary loading={isLoading}>
 					Login
 				</Button>
-				<CustomButton.GoogleLoginBtn />
+				<GoogleLoginButton
+					authStart={authStart}
+					authSuccess={authSuccess}
+					authError={authError}
+					history={history}
+				/>
 			</Form>
 			{/* <FormErrors errors={errors} /> */}
 		</>
