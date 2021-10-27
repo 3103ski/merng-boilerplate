@@ -4,7 +4,7 @@ import { LandingPage, RegisterPage, LoginPage, DashboardPage, UserSettingsPage }
 import { Navbar } from './components';
 
 import AuthRoute from './util/AuthRoute.jsx';
-import { AuthProvider } from './context/auth';
+import { AuthProvider } from './contexts/auth';
 
 import 'semantic-ui-css/semantic.min.css';
 import './App.scss';

@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 import { Menu } from 'semantic-ui-react';
 
-import { AuthContext } from '../../context/auth';
+import { AuthContext } from '../../contexts/auth';
 
 export default function Navbar() {
 	const [activeItem, setActiveItem] = useState();
-	const { user, logout } = useContext(AuthContext);
+	const { token, logout } = useContext(AuthContext);
 
 	const handleItemClick = (_, { name }) => setActiveItem(name);
 
@@ -26,9 +26,9 @@ export default function Navbar() {
 		<Menu inverted>
 			<MenuLink to='/' name='landing' />
 
-			{user ? <MenuLink name='dashboard' to='/user-dash' /> : null}
+			{token ? <MenuLink name='dashboard' to='/user-dash' /> : null}
 
-			{!user ? (
+			{!token ? (
 				<>
 					<MenuLink to='/login' name='login' right />
 					<MenuLink to='/register' name='register' />

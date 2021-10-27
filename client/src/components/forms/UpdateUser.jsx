@@ -4,14 +4,13 @@ import { Form, Button } from 'semantic-ui-react';
 import { useMutation } from '@apollo/client';
 
 import { useForm, useGQLFormErrors } from '../../hooks';
-import { AuthContext } from '../../context/auth';
+import { AuthContext } from '../../contexts/auth';
 import { Loader, FormErrors } from '../../components/';
 import { UPDATE_USER } from '../../gql/';
+import { GET_USER } from '../../gql/';
 import { handleOnEnter } from '../../util/helperFunctions.js';
 
-export default function UpdateUserInfoForm({ callback }) {
-	const { updateUserInfo, user } = useContext(AuthContext);
-
+export default function UpdateUserInfoForm({ callback, user }) {
 	const { values, onSubmit, onChange } = useForm(updateUserInfoHandler, {
 		email: user.email,
 	});
@@ -19,8 +18,9 @@ export default function UpdateUserInfoForm({ callback }) {
 	const { errors, setFormError, clearErrors } = useGQLFormErrors();
 
 	const [updateUser, { loading }] = useMutation(UPDATE_USER, {
-		update(_, { data: { updateUser: userData } }) {
-			updateUserInfo(userData);
+		update(cache, { data: { updateUser: userData } }) {
+			console.log('cache', cache);
+			console.log('user', userData);
 
 			if (callback) callback();
 		},

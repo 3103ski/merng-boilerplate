@@ -11,6 +11,15 @@ export const LOGIN_USER = gql`
 	}
 `;
 
+export const GET_USER = gql`
+	query getUser($userId: ID!) {
+		getUser(userId: $userId) {
+			id
+			email
+		}
+	}
+`;
+
 export const REGISTER_USER = gql`
 	mutation register($email: String!, $password: String!, $confirmPassword: String!) {
 		register(

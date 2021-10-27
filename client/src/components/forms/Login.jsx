@@ -1,70 +1,69 @@
 import React, { useContext } from 'react';
 
 import { Form, Button } from 'semantic-ui-react';
-import { useMutation } from '@apollo/client';
-// import gql from 'graphql-tag';
+import axios from 'axios';
 
-import { useForm, useGQLFormErrors } from '../../hooks';
-import { AuthContext } from '../../context/auth';
-import { Loader, FormErrors, Button as CustomButton } from '../../components';
-import { LOGIN_USER } from '../../gql/';
+import { useForm } from '../../hooks';
+import { AuthContext } from '../../contexts/auth';
+import { Loader, Button as CustomButton } from '../../components';
+import { SERVER_URL } from '../../config';
 
 export default function LoginForm({ history, callback }) {
-	const { loginSuccess } = useContext(AuthContext);
-
-	const { errors, setFormError, clearErrors } = useGQLFormErrors();
-	const { values, onSubmit, onChange } = useForm(loginUser, {
+	const { isLoading, authStart, authSuccess, authError } = useContext(AuthContext);
+	const { values, onSubmit, onChange } = useForm(loginInit, {
 		email: '',
 		password: '',
 	});
 
-	const [login, { loading }] = useMutation(LOGIN_USER, {
-		update(_, { data: { login: userData } }) {
-			loginSuccess(userData);
+	async function loginInit() {
+		await authStart();
 
-			if (callback) callback();
-			if (history) history.push('/user-dash');
-		},
-		onError(err) {
-			setFormError(err);
-		},
-		variables: values,
-	});
-
-	async function loginUser() {
-		await clearErrors();
-		login();
+		axios
+			.post(
+				SERVER_URL + '/auth/login',
+				{
+					email: values.email,
+					password: values.password,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				}
+			)
+			.then((res) => {
+				authSuccess(res.data.token, res.data.user._id);
+				return history.push('/user-dash');
+			})
+			.catch((err) => {
+				authError(err);
+			});
 	}
 
 	return (
 		<>
 			<Form onSubmit={onSubmit}>
-				{loading ? (
-					<Loader loadingText='Logging In' />
-				) : (
-					<>
-						<Form.Input
-							type='email'
-							onChange={onChange}
-							value={values.email}
-							name='email'
-							placeholder='Email'
-						/>
-						<Form.Input
-							type='password'
-							onChange={onChange}
-							value={values.password}
-							name='password'
-							placeholder='Password'
-						/>
-					</>
-				)}
-				<Button type='submit' primary loading={loading}>
+				{isLoading ? <Loader loadingText='Logging In' /> : null}
+				<Form.Input
+					type='email'
+					onChange={onChange}
+					value={values.email}
+					name='email'
+					placeholder='Email'
+				/>
+				<Form.Input
+					type='password'
+					onChange={onChange}
+					value={values.password}
+					name='password'
+					placeholder='Password'
+				/>
+				<Button type='submit' primary loading={isLoading}>
 					Login
 				</Button>
 				<CustomButton.GoogleLoginBtn />
 			</Form>
-			<FormErrors errors={errors} />
+			{/* <FormErrors errors={errors} /> */}
 		</>
 	);
 }

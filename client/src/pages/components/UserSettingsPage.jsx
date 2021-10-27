@@ -1,12 +1,30 @@
 import React, { useContext, useState } from 'react';
 
 import { Container, Button, Grid } from 'semantic-ui-react';
+import { useQuery } from '@apollo/client';
 
-import { AuthContext } from '../../context/';
-import { BasicCard, FormModal, UpdatePasswordForm, UpdateUserInfoForm } from '../../components/';
+import { AuthContext } from '../../contexts';
+import {
+	BasicCard,
+	FormModal,
+	UpdatePasswordForm,
+	UpdateUserInfoForm,
+	Loader,
+} from '../../components/';
+import { GET_USER } from '../../gql/';
 
 export default function UserSettingsPage() {
-	const { user } = useContext(AuthContext);
+	const { userId } = useContext(AuthContext);
+
+	const { loading, data } = useQuery(GET_USER, {
+		variables: {
+			userId,
+		},
+		onError: (err) => {
+			console.log(err);
+		},
+	});
+
 	const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 	const [isUpdatingInfo, setIsUpdatingInfo] = useState(false);
 
@@ -16,7 +34,7 @@ export default function UserSettingsPage() {
 				<Grid>
 					<Grid.Row>
 						<Grid.Column>
-							<p>Email Address: {user.email}</p>
+							{loading ? <Loader /> : <p>Email Address: {data.getUser.email}</p>}
 						</Grid.Column>
 					</Grid.Row>
 					<Grid.Row>
@@ -49,6 +67,7 @@ export default function UserSettingsPage() {
 				isOpen={isUpdatingInfo}
 				setIsOpen={setIsUpdatingInfo}
 				size='tiny'
+				user={!loading ? data.getUser : null}
 			/>
 		</Container>
 	);

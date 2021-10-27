@@ -2,10 +2,10 @@ import React from 'react';
 
 import { ApolloClient, InMemoryCache, createHttpLink, ApolloProvider } from '@apollo/client';
 import { setContext } from 'apollo-link-context';
+import { persistCache, LocalStorageWrapper } from 'apollo3-cache-persist';
 
-import App from './App';
-
-import { TOKEN_TITLE, GQL_TESTING_SERVER_URL } from './config';
+import App from '../App';
+import { TOKEN_TITLE, GQL_TESTING_SERVER_URL } from '../config';
 
 const httpLink = createHttpLink({
 	uri: GQL_TESTING_SERVER_URL,
@@ -20,9 +20,19 @@ const authLink = setContext(() => {
 	};
 });
 
+const cache = new InMemoryCache();
+
+async function persist() {
+	await persistCache({
+		cache,
+		storage: new LocalStorageWrapper(window.localStorage),
+	});
+}
+persist();
+
 const client = new ApolloClient({
 	link: authLink.concat(httpLink),
-	cache: new InMemoryCache(),
+	cache,
 });
 
 const Provider = () => {

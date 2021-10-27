@@ -1,43 +1,62 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
+import { useQuery } from '@apollo/client';
+import axios from 'axios';
 
 import { Form, Button } from 'semantic-ui-react';
-import { useMutation } from '@apollo/client';
 
-import { useForm, useGQLFormErrors } from '../../hooks';
-import { AuthContext } from '../../context/auth';
-import { Loader, FormErrors } from '../../components/';
-import { UPDATE_PASSWORD } from '../../gql/';
+import { useForm } from '../../hooks';
+import { GET_USER } from '../../gql/';
+import { AuthContext } from '../../contexts/';
+import { SERVER_URL } from '../../config';
+import { Loader } from '../../components/';
 import { handleOnEnter } from '../../util/helperFunctions.js';
 
 export default function UpdateUserPasswordForm({ callback }) {
-	const authContext = useContext(AuthContext);
-
-	const { values, onSubmit, onChange } = useForm(updatePasswordHandler, {
+	const [isLoading, setIsLoading] = useState(false);
+	const { token, userId } = useContext(AuthContext);
+	const { values, onSubmit, onChange } = useForm(updatePassword, {
 		password: '',
 		newPassword: '',
 		confirmNewPassword: '',
 	});
 
-	const { errors, setFormError, clearErrors } = useGQLFormErrors();
-
-	const [updateUserPassword, { loading }] = useMutation(UPDATE_PASSWORD, {
-		update(_, { data: { updatePassword: userData } }) {
-			authContext.login(userData);
-
-			if (callback) callback();
+	const { data } = useQuery(GET_USER, {
+		variables: {
+			userId,
 		},
-		onError(err) {
-			setFormError(err);
-		},
-		variables: values,
 	});
 
-	function updatePasswordHandler() {
-		clearErrors();
-		updateUserPassword();
+	async function updatePassword() {
+		if (token && data.getUser) {
+			setIsLoading(true);
+			axios
+				.post(
+					SERVER_URL + '/auth/change-password',
+					{
+						email: data.getUser.email,
+						password: values.password,
+						newPassword: values.newPassword,
+						confirmNewPassword: values.confirmNewPassword,
+					},
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
+					}
+				)
+				.then((res) => {
+					setIsLoading(false);
+					callback();
+				})
+				.then(() => window.alert('Password Updated!'))
+				.catch((err) => {
+					setIsLoading(false);
+					window.alert('Something went wrong');
+				});
+		}
 	}
 
-	const updatePasswordOnEnterHandler = (e) => handleOnEnter(e, updatePasswordHandler);
+	const updatePasswordOnEnterHandler = (e) => handleOnEnter(e, updatePassword);
 
 	useEffect(() => {
 		const form = document.getElementById('form_update_password');
@@ -48,7 +67,7 @@ export default function UpdateUserPasswordForm({ callback }) {
 	return (
 		<>
 			<Form id='form_update_password' onSubmit={onSubmit}>
-				{loading ? (
+				{isLoading ? (
 					<Loader loadingText='Updating Password' />
 				) : (
 					<>
@@ -76,11 +95,11 @@ export default function UpdateUserPasswordForm({ callback }) {
 					</>
 				)}
 				<Button onClick={callback}>Cancel</Button>
-				<Button onClick={updateUserPassword} type='submit' primary>
+				<Button onClick={updatePassword} type='submit' primary>
 					Update Password
 				</Button>
 			</Form>
-			<FormErrors errors={errors} />
+			{/* <FormErrors errors={errors} /> */}
 		</>
 	);
 }

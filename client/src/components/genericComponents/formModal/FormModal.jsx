@@ -7,12 +7,13 @@ export default function FormModal({
 	isOpen,
 	setIsOpen,
 	header,
+	...rest
 }) {
 	return (
 		<Modal size={size} open={isOpen} onClose={() => setIsOpen(false)}>
 			{header ? <Modal.Header>{header}</Modal.Header> : null}
 			<Modal.Content>
-				<Form callback={() => setIsOpen(false)} />
+				<Form {...rest} callback={() => setIsOpen(false)} />
 			</Modal.Content>
 		</Modal>
 	);

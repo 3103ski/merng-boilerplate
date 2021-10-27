@@ -1,42 +1,50 @@
 import React, { useContext } from 'react';
 
+import axios from 'axios';
 import { Form, Button } from 'semantic-ui-react';
-import { useMutation } from '@apollo/client';
 
-import { useForm, useGQLFormErrors } from '../../hooks';
-import { AuthContext } from '../../context/auth';
-import { Loader, FormErrors } from '../../components/';
-import { REGISTER_USER } from '../../gql/';
+import { useForm } from '../../hooks';
+import { SERVER_URL } from '../../config';
+import { AuthContext } from '../../contexts/auth';
+import { Loader } from '../../components/';
 
 export default function RegisterUserForm({ history, callback }) {
-	const { loginSuccess } = useContext(AuthContext);
+	const { isLoading, authStart, authSuccess, authError } = useContext(AuthContext);
 
-	const { errors, setFormError, clearErrors } = useGQLFormErrors();
 	const { values, onSubmit, onChange } = useForm(registerUser, {
 		email: '',
 		password: '',
 		confirmPassword: '',
 	});
 
-	const [addUser, { loading }] = useMutation(REGISTER_USER, {
-		update(_, { data: { register: userData } }) {
-			loginSuccess(userData);
-
-			if (callback) callback();
-			if (history) history.push('/user-dash');
-		},
-		onError(err) {
-			setFormError(err);
-		},
-		variables: values,
-	});
-
-	function registerUser() {
-		clearErrors();
-		addUser();
+	async function registerUser() {
+		console.log('fired');
+		await authStart();
+		axios
+			.post(
+				SERVER_URL + '/auth/signup',
+				{
+					email: values.email,
+					password: values.password,
+					confirmPassword: values.confirmPassword,
+				},
+				{
+					headers: {
+						'Content-Type': 'application/json',
+					},
+				}
+			)
+			.then((res) => {
+				console.log('the call came back', res);
+				authSuccess(res.data.token, res.data.user._id);
+				return history.push('/user-dash');
+			})
+			.catch((err) => {
+				authError(err);
+			});
 	}
 
-	return loading ? (
+	return isLoading ? (
 		<Loader loadingText='Registering User' />
 	) : (
 		<>
@@ -66,7 +74,6 @@ export default function RegisterUserForm({ history, callback }) {
 					Register New User
 				</Button>
 			</Form>
-			<FormErrors errors={errors} />
 		</>
 	);
 }

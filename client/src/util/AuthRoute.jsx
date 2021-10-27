@@ -1,19 +1,19 @@
 import React, { useContext } from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { AuthContext } from '../context/auth';
+import { AuthContext } from '../contexts/auth';
 import { TOKEN_TITLE } from '../config';
 
 const AuthRoute = ({ path, component: Component, ...rest }) => {
-	const { user } = useContext(AuthContext);
+	const { token } = useContext(AuthContext);
 	return (
 		<Route
 			path={path}
 			{...rest}
 			render={(props) => {
-				if (!user) {
+				if (!token) {
 					localStorage.removeItem(TOKEN_TITLE);
 				}
-				return !user ? <Redirect to='/login' /> : <Component {...props} />;
+				return !token ? <Redirect to='/login' /> : <Component {...props} {...rest} />;
 			}}
 		/>
 	);
