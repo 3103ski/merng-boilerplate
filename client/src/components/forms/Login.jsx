@@ -3,11 +3,12 @@ import React, { useContext } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import axios from 'axios';
 
-import { useForm } from '../../hooks';
+import { Loader } from '../../components';
+import { GoogleLoginButton, FacebookLoginButton, SpotifyLoginButton } from './oAuthButtons/';
+
 import { AuthContext } from '../../contexts/auth';
-import { Loader, Button as CustomButton } from '../../components';
-import { GoogleLoginButton } from './oAuthButtons/';
-import { SERVER_URL } from '../../config';
+import { useForm } from '../../hooks';
+import { SERVER_URL } from '../../routes.js';
 
 export default function LoginForm({ history, callback }) {
 	const { isLoading, authStart, authSuccess, authError } = useContext(AuthContext);
@@ -59,10 +60,22 @@ export default function LoginForm({ history, callback }) {
 					name='password'
 					placeholder='Password'
 				/>
-				<Button type='submit' primary loading={isLoading}>
+				<Button type='submit' primary>
 					Login
 				</Button>
 				<GoogleLoginButton
+					authStart={authStart}
+					authSuccess={authSuccess}
+					authError={authError}
+					history={history}
+				/>
+				<SpotifyLoginButton
+					authStart={authStart}
+					authSuccess={authSuccess}
+					authError={authError}
+					history={history}
+				/>
+				<FacebookLoginButton
 					authStart={authStart}
 					authSuccess={authSuccess}
 					authError={authError}

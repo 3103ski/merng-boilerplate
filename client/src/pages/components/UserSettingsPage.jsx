@@ -3,7 +3,6 @@ import React, { useContext, useState } from 'react';
 import { Container, Button, Grid } from 'semantic-ui-react';
 import { useQuery } from '@apollo/client';
 
-import { AuthContext } from '../../contexts';
 import {
 	BasicCard,
 	FormModal,
@@ -11,6 +10,8 @@ import {
 	UpdateUserInfoForm,
 	Loader,
 } from '../../components/';
+
+import { AuthContext } from '../../contexts';
 import { GET_USER } from '../../gql/';
 
 export default function UserSettingsPage() {

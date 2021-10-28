@@ -27,7 +27,9 @@ const PORT = process.env.PORT || 5000;
 const server = new ApolloServer({
 	typeDefs,
 	resolvers,
-	context: ({ req }) => ({ req }),
+	context: ({ req }) => {
+		return { req };
+	},
 });
 
 const app = express();
@@ -43,6 +45,12 @@ app.use(express.static(path.join(__dirname, 'views')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
+
+app.use((req, res, next) => {
+	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	next();
+});
 
 ////•••••••••••••••••
 // Server Routes
@@ -70,7 +78,7 @@ app.use(function (err, req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	res.json({ error: err });
 });
 
 ////•••••••••••••••••

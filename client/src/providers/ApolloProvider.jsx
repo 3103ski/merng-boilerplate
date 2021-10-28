@@ -5,10 +5,12 @@ import { setContext } from 'apollo-link-context';
 import { persistCache, LocalStorageWrapper } from 'apollo3-cache-persist';
 
 import App from '../App';
-import { TOKEN_TITLE, GQL_TESTING_SERVER_URL } from '../config';
+
+import { TOKEN_TITLE } from '../config';
+import { GQL_SERVER_URL } from '../routes.js';
 
 const httpLink = createHttpLink({
-	uri: GQL_TESTING_SERVER_URL,
+	uri: GQL_SERVER_URL,
 });
 
 const authLink = setContext(() => {

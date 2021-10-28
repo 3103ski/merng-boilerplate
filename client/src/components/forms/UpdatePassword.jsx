@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useContext } from 'react';
+
 import { useQuery } from '@apollo/client';
 import axios from 'axios';
-
 import { Form, Button } from 'semantic-ui-react';
+
+import { Loader } from '../../components/';
 
 import { useForm } from '../../hooks';
 import { GET_USER } from '../../gql/';
 import { AuthContext } from '../../contexts/';
-import { SERVER_URL } from '../../config';
-import { Loader } from '../../components/';
+import { SERVER_URL } from '../../routes.js';
 import { handleOnEnter } from '../../util/helperFunctions.js';
 
 export default function UpdateUserPasswordForm({ callback }) {

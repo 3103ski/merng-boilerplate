@@ -3,11 +3,12 @@ import React, { useContext } from 'react';
 import axios from 'axios';
 import { Form, Button } from 'semantic-ui-react';
 
-import { useForm } from '../../hooks';
-import { SERVER_URL } from '../../config';
-import { AuthContext } from '../../contexts/auth';
 import { Loader } from '../../components/';
-import { GoogleLoginButton } from './oAuthButtons/';
+import { GoogleLoginButton, SpotifyLoginButton, FacebookLoginButton } from './oAuthButtons/';
+
+import { useForm } from '../../hooks';
+import { AuthContext } from '../../contexts/auth';
+import { SERVER_URL } from '../../routes.js';
 
 export default function RegisterUserForm({ history, callback }) {
 	const { isLoading, authStart, authSuccess, authError } = useContext(AuthContext);
@@ -19,7 +20,6 @@ export default function RegisterUserForm({ history, callback }) {
 	});
 
 	async function registerUser() {
-		console.log('fired');
 		await authStart();
 		axios
 			.post(
@@ -36,7 +36,6 @@ export default function RegisterUserForm({ history, callback }) {
 				}
 			)
 			.then((res) => {
-				console.log('the call came back', res);
 				authSuccess(res.data.token, res.data.user._id);
 				return history.push('/user-dash');
 			})
@@ -75,6 +74,18 @@ export default function RegisterUserForm({ history, callback }) {
 					Register New User
 				</Button>
 				<GoogleLoginButton
+					authStart={authStart}
+					authSuccess={authSuccess}
+					authError={authError}
+					history={history}
+				/>
+				<SpotifyLoginButton
+					authStart={authStart}
+					authSuccess={authSuccess}
+					authError={authError}
+					history={history}
+				/>
+				<FacebookLoginButton
 					authStart={authStart}
 					authSuccess={authSuccess}
 					authError={authError}

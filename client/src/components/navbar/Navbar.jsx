@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 
 import { AuthContext } from '../../contexts/auth';
+import { LANDING, LOGIN, REGISTER, DASHBOARD, USER_SETTINGS } from '../../routes.js';
 
 export default function Navbar() {
 	const [activeItem, setActiveItem] = useState();
@@ -24,19 +25,19 @@ export default function Navbar() {
 
 	return (
 		<Menu inverted>
-			<MenuLink to='/' name='landing' />
+			<MenuLink to={LANDING} name='landing' />
 
-			{token ? <MenuLink name='dashboard' to='/user-dash' /> : null}
+			{token ? <MenuLink to={DASHBOARD} name='dashboard' /> : null}
 
 			{!token ? (
 				<>
-					<MenuLink to='/login' name='login' right />
-					<MenuLink to='/register' name='register' />
+					<MenuLink to={LOGIN} name='login' right />
+					<MenuLink to={REGISTER} name='register' />
 				</>
 			) : (
 				<>
-					<MenuLink to='/user-settings' name='settings' right />
-					<MenuLink to='/login' name='logout' onClick={logout} />
+					<MenuLink to={USER_SETTINGS} name='settings' right />
+					<MenuLink to={LOGIN} name='logout' onClick={logout} />
 				</>
 			)}
 		</Menu>

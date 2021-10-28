@@ -1,15 +1,14 @@
 module.exports = {
 	MONGODB:
-		'mongodb+srv://bjastski:newmongo@new-mongo.93yin.mongodb.net/new-mongo?retryWrites=true&w=majority',
-	// MONGODB: `ADD MONGO DB LINK HERE`,
-	SERCRET_KEY: '1234-1234-5678-5678',
+		'mongodb+srv://bjastski:newmongo@new-mongo.93yin.mongodb.net/merng-template?retryWrites=true&w=majority',
+	SERCRET_KEY: '12345-67890-09876-54321',
 	facebook: {
-		clientID: '1515252595349081',
-		clientSecret: '7630033f01a7952554a10c98cb39697b',
+		clientID: '1398890980506434',
+		clientSecret: '86ecc212b31f9bcc3e8cc324ae8f8d96',
 	},
 	google: {
-		clientID: '555560470011-lm5fdsua6hfgtfl83vao6voj7sb9tg3b.apps.googleusercontent.com',
-		clientSecret: '_iPw4JHC6oojm5PlZxBkhAKz',
+		clientID: '1088263212743-lmu3v09c5jl4ji4p8r74kcvlcb18vm18.apps.googleusercontent.com',
+		clientSecret: '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',
 	},
 	spotify: {
 		clientID: '58bff4c0f1a44c53a4a373652aa4d0be',

@@ -7,8 +7,20 @@ const userSchema = new Schema(
 			type: String,
 			required: true,
 		},
-		lastLogin: {
+		googleId: {
 			type: String,
+			default: '',
+		},
+		facebookId: {
+			type: String,
+			default: '',
+		},
+		spotifyId: {
+			type: String,
+			default: '',
+		},
+		lastLogin: {
+			type: Date,
 		},
 	},
 	{

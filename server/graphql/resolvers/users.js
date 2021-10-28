@@ -1,7 +1,8 @@
-const User = require('../../models/User');
+const { User } = require('../../models');
 const bcrypt = require('bcrypt');
 const { UserInputError } = require('apollo-server-express');
 const checkAuth = require('../../util/checkAuth');
+const auth = require('../../auth/authenticate');
 const jwt = require('jsonwebtoken');
 
 const { SERCRET_KEY } = require('../../config');
@@ -11,7 +12,6 @@ function generateToken(user) {
 		{
 			id: user.id,
 			email: user.email,
-			username: user.username,
 		},
 		SERCRET_KEY,
 		{ expiresIn: '1h' }
@@ -32,6 +32,27 @@ module.exports = {
 		},
 	},
 	Mutation: {
+		async updateUser(_, { updateUserInput }, context) {
+			const user = checkAuth(context);
+
+			if (user) {
+				if (updateUserInput.password) {
+					throw new error(
+						'You should not be using this GQL endpoint to update passwords'
+					);
+				}
+
+				await User.findByIdAndUpdate(user._id, {
+					$set: {
+						...updateUserInput,
+					},
+				});
+
+				const updatedUser = await User.findById(user._id);
+
+				return updatedUser;
+			}
+		},
 		async login(_, { loginInput: { email, password } }) {
 			const user = await User.findOne({ email });
 
@@ -60,68 +81,6 @@ module.exports = {
 				id: user._id,
 				token,
 			};
-		},
-		async updatePassword(
-			_,
-			{ updatePasswordInput: { password, newPassword, confirmNewPassword } },
-			context
-		) {
-			const validatedUser = checkAuth(context);
-
-			if (validatedUser) {
-				const user = await User.findById(validatedUser.id);
-				const match = await bcrypt.compare(password, user.password);
-
-				if (!match) {
-					throw new UserInputError('Wrong Credentials', {
-						errors: {
-							password: 'The password you entered for this user is not correct',
-						},
-					});
-				} else {
-					if (newPassword === confirmNewPassword) {
-						const newPasswordEncrypted = await bcrypt.hash(newPassword, 12);
-
-						user.password = newPasswordEncrypted;
-
-						const res = await user.save();
-						const token = generateToken(res);
-
-						return {
-							...res._doc,
-							id: res._id,
-							token,
-						};
-					} else {
-						throw new UserInputError('Passwords do not match', {
-							errors: {
-								newPassword: 'The passwords you entered do not match',
-							},
-						});
-					}
-				}
-			}
-		},
-		async updateUser(_, { updateUserInput }, context) {
-			const user = checkAuth(context);
-
-			if (user) {
-				if (updateUserInput.password) {
-					throw new error(
-						'You should not be using this GQL endpoint to update passwords'
-					);
-				}
-
-				await User.findByIdAndUpdate(user.id, {
-					$set: {
-						...updateUserInput,
-					},
-				});
-
-				const updatedUser = await User.findById(user.id);
-
-				return updatedUser;
-			}
 		},
 		async register(_, { registerInput: { email, password, confirmPassword } }) {
 			const user = await User.findOne({ email });

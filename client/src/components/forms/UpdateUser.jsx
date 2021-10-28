@@ -1,13 +1,12 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useEffect } from 'react';
 
 import { Form, Button } from 'semantic-ui-react';
 import { useMutation } from '@apollo/client';
 
-import { useForm, useGQLFormErrors } from '../../hooks';
-import { AuthContext } from '../../contexts/auth';
 import { Loader, FormErrors } from '../../components/';
 import { UPDATE_USER } from '../../gql/';
-import { GET_USER } from '../../gql/';
+
+import { useForm, useGQLFormErrors } from '../../hooks';
 import { handleOnEnter } from '../../util/helperFunctions.js';
 
 export default function UpdateUserInfoForm({ callback, user }) {

@@ -5,6 +5,7 @@ import { Navbar } from './components';
 
 import AuthRoute from './util/AuthRoute.jsx';
 import { AuthProvider } from './contexts/auth';
+import { LANDING, LOGIN, REGISTER, DASHBOARD, USER_SETTINGS } from './routes.js';
 
 import 'semantic-ui-css/semantic.min.css';
 import './App.scss';
@@ -14,11 +15,11 @@ function App() {
 		<AuthProvider>
 			<Router>
 				<Navbar />
-				<Route exact path={'/'} component={LandingPage} />
-				<Route exact path={'/login'} component={LoginPage} />
-				<Route exact path={'/register'} component={RegisterPage} />
-				<AuthRoute exact path={'/user-dash'} component={DashboardPage} />
-				<AuthRoute exact path={'/user-settings'} component={UserSettingsPage} />
+				<Route exact path={LANDING} component={LandingPage} />
+				<Route exact path={LOGIN} component={LoginPage} />
+				<Route exact path={REGISTER} component={RegisterPage} />
+				<AuthRoute exact path={DASHBOARD} component={DashboardPage} />
+				<AuthRoute exact path={USER_SETTINGS} component={UserSettingsPage} />
 			</Router>
 		</AuthProvider>
 	);
