@@ -2,12 +2,12 @@ import axios from 'axios';
 import GoogleLogin from 'react-google-login';
 import icon from './google.png';
 
-import { GOOGLE_CLIENT_ID } from '../../../../config';
+import { GOOGLE_CLIENT_ID, USE_OAUTH } from '../../../../config';
 import { SERVER_URL, GOOGLE_AUTH, LOGIN_SUCCES_REDIRECT } from '../../../../routes.js';
 import * as style from '../oAuthButtons.module.scss';
 
 export default function GoogleAuthButton({ authStart, authSuccess, authError, history }) {
-	const responseGoogle = async ({ tokenId }) => {
+	const googleResponseCallback = async ({ tokenId }) => {
 		await authStart();
 
 		return axios
@@ -25,7 +25,7 @@ export default function GoogleAuthButton({ authStart, authSuccess, authError, hi
 			});
 	};
 
-	return (
+	return USE_OAUTH.google ? (
 		<GoogleLogin
 			clientId={GOOGLE_CLIENT_ID}
 			render={(renderProps) => (
@@ -36,8 +36,8 @@ export default function GoogleAuthButton({ authStart, authSuccess, authError, hi
 					<span>Login With Google</span>
 				</button>
 			)}
-			onSuccess={responseGoogle}
-			onFailure={responseGoogle}
+			onSuccess={googleResponseCallback}
+			onFailure={googleResponseCallback}
 		/>
-	);
+	) : null;
 }

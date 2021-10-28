@@ -2,16 +2,17 @@ import React, { useState, useEffect, useCallback } from 'react';
 import FacebookLogin from 'react-facebook-login';
 import axios from 'axios';
 
-import { FACEBOOK_APP_ID } from '../../../../config.js';
+import { FACEBOOK_APP_ID, USE_OAUTH } from '../../../../config.js';
 import { LOGIN_SUCCES_REDIRECT, SERVER_URL, FACEBOOK_AUTH } from '../../../../routes.js';
 import icon from './facebook.png';
 import * as style from '../oAuthButtons.module.scss';
 
 export default function FacebookLoginBtn({ authStart, authSuccess, authError, history }) {
 	const [authInfo, setAuthInfo] = useState(null);
-	const responseFacebook = (response) =>
-		response.accessToken ? setAuthInfo(response) : console.log('There was an error');
 	const Icon = () => <img src={icon} alt='fb login' />;
+
+	const facebookResponseCallback = (response) =>
+		response.accessToken ? setAuthInfo(response) : console.log('There was an error');
 
 	const facebookAuthInit = useCallback(
 		async ({ accessToken }) => {
@@ -38,7 +39,7 @@ export default function FacebookLoginBtn({ authStart, authSuccess, authError, hi
 		}
 	}, [authInfo, facebookAuthInit]);
 
-	return (
+	return USE_OAUTH.facebook ? (
 		<FacebookLogin
 			appId={FACEBOOK_APP_ID}
 			autoLoad={false}
@@ -46,7 +47,7 @@ export default function FacebookLoginBtn({ authStart, authSuccess, authError, hi
 			cssClass={`${style.FacebookBtn} ${style.OAuthBtn}`}
 			icon={<Icon />}
 			textButton='Login With Facebook'
-			callback={responseFacebook}
+			callback={facebookResponseCallback}
 		/>
-	);
+	) : null;
 }

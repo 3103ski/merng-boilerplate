@@ -1,22 +1,17 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
+import { Switch, Route } from 'react-router-dom';
 
-import { Container, Button, Grid } from 'semantic-ui-react';
+import { Container } from 'semantic-ui-react';
 import { useQuery } from '@apollo/client';
 
-import {
-	BasicCard,
-	FormModal,
-	UpdatePasswordForm,
-	UpdateUserInfoForm,
-	Loader,
-} from '../../components/';
+import { SettingsNavigation, LoginInfoTab } from '../../components/';
 
 import { AuthContext } from '../../contexts';
+import { USER_SETTINGS, SETTINGS_PROFILE, SETTINGS_LOGIN_INFO } from '../../routes.js';
 import { GET_USER } from '../../gql/';
 
-export default function UserSettingsPage() {
+export default function UserSettingsPage(props) {
 	const { userId } = useContext(AuthContext);
-
 	const { loading, data } = useQuery(GET_USER, {
 		variables: {
 			userId,
@@ -26,50 +21,16 @@ export default function UserSettingsPage() {
 		},
 	});
 
-	const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
-	const [isUpdatingInfo, setIsUpdatingInfo] = useState(false);
-
 	return (
 		<Container>
-			<BasicCard centerSelf title={'User Settings'}>
-				<Grid>
-					<Grid.Row>
-						<Grid.Column>
-							{loading ? <Loader /> : <p>Email Address: {data.getUser.email}</p>}
-						</Grid.Column>
-					</Grid.Row>
-					<Grid.Row>
-						<Grid.Column width={8}>
-							<Button size='tiny' onClick={() => setIsUpdatingPassword(true)}>
-								Change Password
-							</Button>
-						</Grid.Column>
-						<Grid.Column width={8}>
-							<Button
-								size='tiny'
-								onClick={() => setIsUpdatingInfo(true)}
-								color='teal'>
-								Update Info
-							</Button>
-						</Grid.Column>
-					</Grid.Row>
-				</Grid>
-			</BasicCard>
-			<FormModal
-				header='Update Password'
-				formComponent={UpdatePasswordForm}
-				isOpen={isUpdatingPassword}
-				setIsOpen={setIsUpdatingPassword}
-				size='tiny'
-			/>
-			<FormModal
-				header='UpdateInfo'
-				formComponent={UpdateUserInfoForm}
-				isOpen={isUpdatingInfo}
-				setIsOpen={setIsUpdatingInfo}
-				size='tiny'
-				user={!loading ? data.getUser : null}
-			/>
+			<SettingsNavigation />
+			<Switch>
+				<Route path={`${USER_SETTINGS}${SETTINGS_PROFILE}`} />
+				<Route
+					path={`${USER_SETTINGS}${SETTINGS_LOGIN_INFO}`}
+					render={() => <LoginInfoTab user={data.getUser} loading={loading} />}
+				/>
+			</Switch>
 		</Container>
 	);
 }

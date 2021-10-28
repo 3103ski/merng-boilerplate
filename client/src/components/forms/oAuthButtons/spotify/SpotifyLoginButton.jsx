@@ -3,7 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { SpotifyAuth, Scopes } from 'react-spotify-auth';
 import axios from 'axios';
 
-import { SPOTIFY_CLIENT_ID } from '../../../../config';
+import { SPOTIFY_CLIENT_ID, USE_OAUTH } from '../../../../config';
 import {
 	NO_AUTH_REDIRECT,
 	LOGIN_SUCCES_REDIRECT,
@@ -11,6 +11,7 @@ import {
 	BASE_URL,
 	SERVER_URL,
 } from '../../../../routes.js';
+
 import 'react-spotify-auth/dist/index.css';
 import * as style from '../oAuthButtons.module.scss';
 
@@ -50,7 +51,7 @@ export default function SpotifyLoginButton({ authStart, authSuccess, authError, 
 		}
 	}, [spotifyToken, spotifyAuthInit]);
 
-	return (
+	return USE_OAUTH.spotify ? (
 		<SpotifyAuth
 			clientID={SPOTIFY_CLIENT_ID}
 			onAccessToken={(token) => setSpotifyToken(token)}
@@ -59,5 +60,5 @@ export default function SpotifyLoginButton({ authStart, authSuccess, authError, 
 			title='Login With Spotify'
 			btnClassName={`${style.SpotifyBtn} ${style.OAuthBtn}`}
 		/>
-	);
+	) : null;
 }

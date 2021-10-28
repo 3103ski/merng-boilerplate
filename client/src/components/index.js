@@ -6,11 +6,15 @@ export { default as UpdateUserInfoForm } from './forms/UpdateUser.jsx';
 
 export { default as FormErrors } from './forms/FormErrors.jsx';
 
-// Layout Components
-export { default as Navbar } from './navbar/Navbar.jsx';
+// Navigation
+export { default as MainNavigation } from './navigation/mainNav/MainNav.jsx';
+export { default as SettingsNavigation } from './navigation/settingsNav/SettingsNav.jsx';
 
 // Generic Components
 export { default as BasicCard } from './genericComponents/card/Card.jsx';
 export { default as Loader } from './genericComponents/loader/Loader.jsx';
 export { default as FormModal } from './genericComponents/formModal/FormModal.jsx';
 export { default as Button } from './genericComponents/button/Button.jsx';
+
+// Presentational Components
+export { default as LoginInfoTab } from './presentationalComponents/userSettings/LoginInfo.jsx';

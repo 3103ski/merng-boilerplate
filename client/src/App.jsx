@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 import { LandingPage, RegisterPage, LoginPage, DashboardPage, UserSettingsPage } from './pages';
-import { Navbar } from './components';
-
 import AuthRoute from './util/AuthRoute.jsx';
+import { MainNavigation } from './components';
+
 import { AuthProvider } from './contexts/auth';
 import { LANDING, LOGIN, REGISTER, DASHBOARD, USER_SETTINGS } from './routes.js';
 
@@ -14,12 +14,12 @@ function App() {
 	return (
 		<AuthProvider>
 			<Router>
-				<Navbar />
+				<MainNavigation />
 				<Route exact path={LANDING} component={LandingPage} />
 				<Route exact path={LOGIN} component={LoginPage} />
 				<Route exact path={REGISTER} component={RegisterPage} />
+				<AuthRoute path={USER_SETTINGS} component={UserSettingsPage} />
 				<AuthRoute exact path={DASHBOARD} component={DashboardPage} />
-				<AuthRoute exact path={USER_SETTINGS} component={UserSettingsPage} />
 			</Router>
 		</AuthProvider>
 	);

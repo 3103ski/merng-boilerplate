@@ -9,7 +9,7 @@ import { Loader } from '../../components/';
 import { useForm } from '../../hooks';
 import { GET_USER } from '../../gql/';
 import { AuthContext } from '../../contexts/';
-import { SERVER_URL } from '../../routes.js';
+import { SERVER_URL, LOCAL_PW_CHANGE } from '../../routes.js';
 import { handleOnEnter } from '../../util/helperFunctions.js';
 
 export default function UpdateUserPasswordForm({ callback }) {
@@ -32,7 +32,7 @@ export default function UpdateUserPasswordForm({ callback }) {
 			setIsLoading(true);
 			axios
 				.post(
-					SERVER_URL + '/auth/change-password',
+					SERVER_URL + LOCAL_PW_CHANGE,
 					{
 						email: data.getUser.email,
 						password: values.password,

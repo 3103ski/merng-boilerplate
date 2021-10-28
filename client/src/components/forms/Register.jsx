@@ -8,9 +8,9 @@ import { GoogleLoginButton, SpotifyLoginButton, FacebookLoginButton } from './oA
 
 import { useForm } from '../../hooks';
 import { AuthContext } from '../../contexts/auth';
-import { SERVER_URL } from '../../routes.js';
+import { SERVER_URL, LOCAL_REGISTER, LOGIN_SUCCES_REDIRECT } from '../../routes.js';
 
-export default function RegisterUserForm({ history, callback }) {
+export default function RegisterUserForm({ history }) {
 	const { isLoading, authStart, authSuccess, authError } = useContext(AuthContext);
 
 	const { values, onSubmit, onChange } = useForm(registerUser, {
@@ -23,7 +23,7 @@ export default function RegisterUserForm({ history, callback }) {
 		await authStart();
 		axios
 			.post(
-				SERVER_URL + '/auth/signup',
+				SERVER_URL + LOCAL_REGISTER,
 				{
 					email: values.email,
 					password: values.password,
@@ -37,7 +37,7 @@ export default function RegisterUserForm({ history, callback }) {
 			)
 			.then((res) => {
 				authSuccess(res.data.token, res.data.user._id);
-				return history.push('/user-dash');
+				return history.push(LOGIN_SUCCES_REDIRECT);
 			})
 			.catch((err) => {
 				authError(err);

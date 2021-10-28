@@ -14,3 +14,12 @@ export const handleOnEnter = (e, callback) => {
 		callback();
 	}
 };
+
+export const slugToText = (slug) =>
+	slug.replace(new RegExp(/\//gi), ' ').replace(new RegExp(/-/gi), ' ');
+
+export const titleCaps = (sentence) =>
+	sentence
+		.split(' ')
+		.map((word) => `${word.slice(0, 1).toUpperCase()}${word.slice(1)}`)
+		.join(' ');
