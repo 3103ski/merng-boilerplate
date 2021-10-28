@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
 const cors = require('./auth/cors.js');
+require('dotenv').config();
 
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./graphql/typeDefs');

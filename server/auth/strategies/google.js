@@ -2,16 +2,15 @@ const { User } = require('../../models/');
 
 const GoogleTokenStrategy = require('passport-token-google2').Strategy;
 
-const config = require('../../config.js');
 const passport = require('passport');
 
-const { clientID, clientSecret } = config.google;
+const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('../../config.js').credentials;
 
 module.exports.googleStrategy = passport.use(
 	new GoogleTokenStrategy(
 		{
-			clientID,
-			clientSecret,
+			clientID: GOOGLE_CLIENT_ID,
+			clientSecret: GOOGLE_CLIENT_SECRET,
 		},
 		async function (accessToken, refreshToken, profile, done) {
 			User.findOne({ googleId: profile.id }, async (err, user) => {
@@ -23,6 +22,7 @@ module.exports.googleStrategy = passport.use(
 				} else {
 					user = new User({
 						email: profile.emails[0].value,
+						displayName: profile.emails[0].value.split('@')[0],
 						googleId: profile.id,
 					});
 

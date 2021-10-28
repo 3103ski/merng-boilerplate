@@ -13,7 +13,7 @@ authRouter
 	.route('/signup')
 	.options(cors.cors, (req, res) => res.sendStatus(200))
 	.post(cors.cors, (req, res, next) => {
-		const { email, password, confirmPassword } = req.body;
+		const { email, password, confirmPassword, displayName } = req.body;
 		const existingUser = User.find({ email })[0];
 		if (existingUser) {
 			res.statusCode = 400;
@@ -25,7 +25,7 @@ authRouter
 			});
 		} else {
 			if (password === confirmPassword) {
-				User.register(new User({ email }), password, (err, user) => {
+				User.register(new User({ email, displayName }), password, (err, user) => {
 					if (err) {
 						res.statusCode = 500;
 						res.setHeader('Content-Type', 'application/json');
@@ -142,7 +142,8 @@ authRouter
 				})
 				.then((spotifyResponse) => {
 					const profile = spotifyResponse.data;
-					User.findOne({ spotifyId: profile.id }, async (err, user) => {
+					console.log(profile);
+					User.findOne({ spotifyId: profile.id }, (err, user) => {
 						if (err) {
 							res.statusCode = 500;
 							res.setHeader('Content-Type', 'application/json');
@@ -164,6 +165,7 @@ authRouter
 							});
 						} else {
 							let user = new User({
+								displayName: profile.email.split('@')[0],
 								email: profile.email,
 								spotifyId: profile.id,
 							});

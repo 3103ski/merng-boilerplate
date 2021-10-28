@@ -3,13 +3,13 @@ const passport = require('passport');
 const FacebookTokenStrategy = require('passport-facebook-token');
 
 const config = require('../../config.js');
-const { clientID, clientSecret } = config.facebook;
+const { FACEBOOK_CLIENT_ID, FACEBOOK_CLIENT_SECRET } = config.credentials;
 
 module.exports.facebookPassport = passport.use(
 	new FacebookTokenStrategy(
 		{
-			clientID,
-			clientSecret,
+			clientID: FACEBOOK_CLIENT_ID,
+			clientSecret: FACEBOOK_CLIENT_SECRET,
 			fbGraphVersion: 'v3.0',
 		},
 		function (accessToken, refreshToken, profile, done) {
