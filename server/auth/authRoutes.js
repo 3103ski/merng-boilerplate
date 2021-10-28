@@ -1,7 +1,6 @@
 const express = require('express');
 const axios = require('axios');
 const passport = require('passport');
-// const bcrypt = require('bcrypt');
 
 const cors = require('./cors');
 const auth = require('./authenticate.js');
