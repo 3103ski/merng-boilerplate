@@ -15,6 +15,7 @@ export default function RegisterUserForm({ history }) {
 
 	const { values, onSubmit, onChange } = useForm(registerUser, {
 		email: '',
+		displayName: '',
 		password: '',
 		confirmPassword: '',
 	});
@@ -26,6 +27,7 @@ export default function RegisterUserForm({ history }) {
 				SERVER_URL + LOCAL_REGISTER,
 				{
 					email: values.email,
+					displayName: values.displayName,
 					password: values.password,
 					confirmPassword: values.confirmPassword,
 				},
@@ -55,6 +57,13 @@ export default function RegisterUserForm({ history }) {
 					value={values.email}
 					name='email'
 					placeholder='Email'
+				/>
+				<Form.Input
+					type='text'
+					onChange={onChange}
+					value={values.displayName}
+					name='displayName'
+					placeholder='Display Name'
 				/>
 				<Form.Input
 					type='password'
