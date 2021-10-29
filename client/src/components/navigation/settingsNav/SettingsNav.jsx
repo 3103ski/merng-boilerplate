@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Menu } from 'semantic-ui-react';
 
 import { USER_SETTINGS, SETTINGS_PROFILE, SETTINGS_LOGIN_INFO } from '../../../routes.js';
-import { slugToText } from '../../../util/helperFunctions';
+import { slugToText, returnPathSegment } from '../../../util/helperFunctions';
 
 export default function SettingsNav() {
-	const [activeTab, setActiveTab] = useState(slugToText(SETTINGS_PROFILE));
+	const path = returnPathSegment(useLocation().pathname, 1, true);
+	const [activeTab, setActiveTab] = useState(path);
 
 	const handleItemClick = (e, { name }) => setActiveTab(name);
 

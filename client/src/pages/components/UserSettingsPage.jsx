@@ -4,7 +4,7 @@ import { Switch, Route } from 'react-router-dom';
 import { Container } from 'semantic-ui-react';
 import { useQuery } from '@apollo/client';
 
-import { SettingsNavigation, LoginInfoTab } from '../../components/';
+import { SettingsNavigation, LoginSettings } from '../../components/';
 
 import { AuthContext } from '../../contexts';
 import { USER_SETTINGS, SETTINGS_PROFILE, SETTINGS_LOGIN_INFO } from '../../routes.js';
@@ -21,16 +21,16 @@ export default function UserSettingsPage(props) {
 		},
 	});
 
-	return (
+	return !loading ? (
 		<Container>
 			<SettingsNavigation />
 			<Switch>
 				<Route path={`${USER_SETTINGS}${SETTINGS_PROFILE}`} />
 				<Route
 					path={`${USER_SETTINGS}${SETTINGS_LOGIN_INFO}`}
-					render={() => <LoginInfoTab user={data.getUser} loading={loading} />}
+					render={() => <LoginSettings user={data.getUser} loading={loading} />}
 				/>
 			</Switch>
 		</Container>
-	);
+	) : null;
 }

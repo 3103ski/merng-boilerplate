@@ -5,15 +5,20 @@ export const GET_USER = gql`
 		getUser(userId: $userId) {
 			id
 			email
+			displayName
+			spotifyId
+			googleId
+			facebookId
 		}
 	}
 `;
 
 export const UPDATE_USER = gql`
-	mutation updateUser($email: String) {
-		updateUser(updateUserInput: { email: $email }) {
+	mutation updateUser($email: String, $displayName: String) {
+		updateUser(updateUserInput: { email: $email, displayName: $displayName }) {
 			id
 			email
+			displayName
 			createdAt
 		}
 	}

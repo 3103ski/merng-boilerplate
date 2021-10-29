@@ -1,10 +1,12 @@
-import React, { useState, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useContext, useEffect } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 import { Menu } from 'semantic-ui-react';
 
 import { AuthContext } from '../../../contexts/auth';
-import { slugToText } from '../../../util/helperFunctions';
+import { slugToText, returnPathSegment } from '../../../util/helperFunctions';
+import * as style from './mainNav.module.scss';
+
 import {
 	LANDING,
 	LOGIN,
@@ -13,47 +15,57 @@ import {
 	USER_SETTINGS,
 	SETTINGS_PROFILE,
 } from '../../../routes.js';
-import * as style from './mainNav.module.scss';
 
 export default function Navbar() {
-	const [activeItem, setActiveItem] = useState();
 	const { token, logout } = useContext(AuthContext);
 	const [LANDING_LABEL, LOGOUT_LABEL] = ['landing', 'logout'];
 
-	const handleItemClick = (_, { name }) => setActiveItem(name);
+	const path = returnPathSegment(useLocation().pathname, 0, true);
+	const [activeItem, setActiveItem] = useState(path);
 
-	const MenuLink = ({ to, right, name, onClick }) => (
-		<Menu.Item
-			active={activeItem === name}
-			name={name}
-			position={right ? 'right' : null}
-			onClick={onClick ? onClick : handleItemClick}
-			as={Link}
-			to={to}
-		/>
-	);
+	const handleItemClick = (_, { name }) => setActiveItem(slugToText(name));
+
+	function MenuLink({ to, right, name, onClick }) {
+		return (
+			<Menu.Item
+				active={activeItem === slugToText(name)}
+				name={name}
+				position={right ? 'right' : null}
+				onClick={onClick ? onClick : handleItemClick}
+				as={Link}
+				to={to}
+			/>
+		);
+	}
+
+	function handleOnLogoutClick() {
+		logout();
+		setActiveItem(slugToText(LOGIN));
+	}
+
+	useEffect(() => {
+		setActiveItem(path);
+	}, [path]);
 
 	return (
 		<Menu className={style.Container} inverted>
 			<MenuLink to={LANDING} name={LANDING_LABEL} />
 
-			{token ? <MenuLink to={DASHBOARD} name={slugToText(DASHBOARD)} /> : null}
+			{token ? <MenuLink to={DASHBOARD} name={DASHBOARD} /> : null}
 
-			{!token ? (
-				<>
-					<MenuLink to={LOGIN} name={slugToText(LOGIN)} right />
-					<MenuLink to={REGISTER} name={slugToText(REGISTER)} />
-				</>
-			) : (
-				<>
-					<MenuLink
-						to={`${USER_SETTINGS}${SETTINGS_PROFILE}`}
-						name={slugToText(USER_SETTINGS)}
-						right
-					/>
-					<MenuLink to={LOGIN} name={LOGOUT_LABEL} onClick={logout} />
-				</>
-			)}
+			<Menu.Menu position={'right'}>
+				{!token ? (
+					<>
+						<MenuLink to={LOGIN} name={LOGIN} right />
+						<MenuLink to={REGISTER} name={REGISTER} />
+					</>
+				) : (
+					<>
+						<MenuLink to={`${USER_SETTINGS}${SETTINGS_PROFILE}`} name={USER_SETTINGS} />
+						<MenuLink to={LOGIN} name={LOGOUT_LABEL} onClick={handleOnLogoutClick} />
+					</>
+				)}
+			</Menu.Menu>
 		</Menu>
 	);
 }

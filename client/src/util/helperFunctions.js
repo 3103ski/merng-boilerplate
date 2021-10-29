@@ -15,8 +15,15 @@ export const handleOnEnter = (e, callback) => {
 	}
 };
 
-export const slugToText = (slug) =>
-	slug.replace(new RegExp(/\//gi), ' ').replace(new RegExp(/-/gi), ' ');
+export const slugToText = (slug) => {
+	const returnString = slug.replace(new RegExp(/\//gi), ' ').replace(new RegExp(/-/gi), ' ');
+	return returnString[0] === ' ' ? returnString.slice(1) : returnString;
+};
+
+export const returnPathSegment = (path, segment = 0, removeSymbols = false) => {
+	const text = path.split('/').filter((e) => e !== '/')[segment + 1];
+	return removeSymbols ? slugToText(text) : text;
+};
 
 export const titleCaps = (sentence) =>
 	sentence

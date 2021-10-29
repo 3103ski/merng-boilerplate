@@ -3,8 +3,8 @@ import React, { useEffect } from 'react';
 import { Form, Button } from 'semantic-ui-react';
 import { useMutation } from '@apollo/client';
 
-import { Loader, FormErrors } from '../../components/';
-import { UPDATE_USER } from '../../gql/';
+import { Loader, FormErrors } from '..';
+import { UPDATE_USER } from '../../gql';
 
 import { useForm, useGQLFormErrors } from '../../hooks';
 import { handleOnEnter } from '../../util/helperFunctions.js';
@@ -17,10 +17,7 @@ export default function UpdateUserInfoForm({ callback, user }) {
 	const { errors, setFormError, clearErrors } = useGQLFormErrors();
 
 	const [updateUser, { loading }] = useMutation(UPDATE_USER, {
-		update(cache, { data: { updateUser: userData } }) {
-			console.log('cache', cache);
-			console.log('user', userData);
-
+		update(_, { data: { updateUser: userData } }) {
 			if (callback) callback();
 		},
 		onError(err) {

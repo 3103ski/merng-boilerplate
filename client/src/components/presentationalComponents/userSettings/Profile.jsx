@@ -10,7 +10,7 @@ import {
 	Loader,
 } from '../../../components/';
 
-export default function LoginInfoTab({ loading, user }) {
+export default function ProfileSettings({ loading, user }) {
 	const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 	const [isUpdatingInfo, setIsUpdatingInfo] = useState(false);
 
@@ -19,7 +19,7 @@ export default function LoginInfoTab({ loading, user }) {
 			<BasicCard centerSelf title={'User Settings'}>
 				<Grid>
 					<Grid.Column width={16}>
-						{loading ? <Loader /> : <p>Email Address: {user.email}</p>}
+						{loading ? <Loader /> : <p>Display Name: {user.displayName}</p>}
 					</Grid.Column>
 
 					<Grid.Column width={9}>
