@@ -1,8 +1,8 @@
 //••••••••••••••
 // Client URLS
 //••••••••••••••
-export const BASE_URL = `http://localhost:3000`;
-// export const BASE_URL = `PROD_CLIENT_URL`;
+
+export const BASE_URL = `http://${process.env.REACT_APP_BASE_URL}`;
 
 // Routes
 export const LANDING = `/`;
@@ -22,10 +22,8 @@ export const NO_AUTH_REDIRECT = LOGIN;
 //••••••••••••••
 // Server Urls
 //••••••••••••••
-export const SERVER_URL = `http://localhost:5000`;
-export const GQL_SERVER_URL = `http://localhost:5000/graphql`;
-// export const SERVER_URL = `PROD_SERVER_URL`;
-// export const GQL_SERVER_URL = `PROD_GQL_SERVER_URL`;
+export const SERVER_URL = `http://${process.env.REACT_APP_SERVER_URL}`;
+export const GQL_SERVER_URL = `http://${process.env.REACT_APP_GQL_SERVER_URL}`;
 
 export const SPOTIFY_AUTH = `/auth/spotify/token`;
 export const FACEBOOK_AUTH = `/auth/facebook/token?access_token=`;
