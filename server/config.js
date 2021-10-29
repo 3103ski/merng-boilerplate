@@ -1,7 +1,6 @@
 module.exports = {
-	MONGODB:
-		'mongodb+srv://bjastski:newmongo@new-mongo.93yin.mongodb.net/merng-template?retryWrites=true&w=majority',
-	SERCRET_KEY: '12345-67890-09876-54321',
+	MONGODB: process.env.MONGO_DB,
+	SERCRET_KEY: process.env.SECRET_KEY,
 	credentials: {
 		FACEBOOK_CLIENT_ID: process.env.FACEBOOK_CLIENT_ID,
 		FACEBOOK_CLIENT_SECRET: process.env.FACEBOOK_CLIENT_SECRET,
