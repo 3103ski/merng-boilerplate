@@ -8,14 +8,14 @@ import { useForm, useGQLFormErrors } from '../../../hooks';
 import { Form, Button } from 'semantic-ui-react';
 
 //~~~  Local Components
-import { Loader, GQLFormErrors } from '../../../components/';
+import { Loader, GQLFormErrors } from '../..';
 
 //~~~  Variables & Helpers
-import { UPDATE_USER } from '../../../gql/';
+import { UPDATE_USER } from '../../../gql';
 import { handleOnEnter } from '../../../util/helperFunctions.js';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-export default function UpdateUserInfoForm({ callback, user }) {
+export default function UpdateAuthEmail({ callback, user }) {
 	const { values, onSubmit, onChange } = useForm(updateUserInfoHandler, {
 		email: user.email,
 	});
@@ -40,8 +40,14 @@ export default function UpdateUserInfoForm({ callback, user }) {
 	const updateOnEnterHandler = (e) => handleOnEnter(e, updateUserInfoHandler);
 
 	useEffect(() => {
+		/**
+		 * 	for whatever reason, the submit callback doesn't fire on enter
+		 * 	when the form exists inside of semantic UI modal component.
+		 */
+
 		const form = document.getElementById('form_update_user_info');
 		form.addEventListener('keydown', updateOnEnterHandler);
+
 		return () => form.removeEventListener('keydown', updateOnEnterHandler);
 	});
 

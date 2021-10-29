@@ -5,19 +5,19 @@ const passport = require('passport');
 const cors = require('./cors');
 const auth = require('./authenticate.js');
 const User = require('../models/User.js');
+const { jsonRESPONSE } = require('../util/responseHelpers.js');
 
 const authRouter = express.Router();
 
 authRouter
 	.route('/signup')
-	.options(cors.cors, (req, res) => res.sendStatus(200))
-	.post(cors.cors, (req, res, next) => {
+	.options(cors.cors, (_, res) => res.sendStatus(200))
+	.post(cors.cors, (req, res) => {
 		const { email, password, confirmPassword, displayName } = req.body;
 		const existingUser = User.find({ email })[0];
+
 		if (existingUser) {
-			res.statusCode = 400;
-			res.setHeader('Content-Type', 'application/json');
-			res.json({
+			return jsonRESPONSE(400, res, {
 				errors: {
 					email: 'This email already has an account',
 				},
@@ -26,36 +26,25 @@ authRouter
 			if (password === confirmPassword) {
 				User.register(new User({ email, displayName }), password, (err, user) => {
 					if (err) {
-						res.statusCode = 500;
-						res.setHeader('Content-Type', 'application/json');
-						res.json({ err });
+						return jsonRESPONSE(500, res, { err });
 					} else {
 						user.save((err) => {
 							if (err) {
-								res.statusCode = 500;
-								res.setHeader('Content-Type', 'application/json');
-								res.json({ err });
+								return jsonRESPONSE(500, res, { err });
 							}
-							passport.authenticate('local')(req, res, () => {
-								const token = auth.getToken({ _id: req.user._id });
-
-								res.statusCode = 200;
-								res.setHeader('Content-Type', 'application/json');
-								3;
-								res.json({
-									token,
+							return passport.authenticate('local')(req, res, () =>
+								jsonRESPONSE(200, res, {
+									token: auth.getToken({ _id: req.user._id }),
 									success: true,
 									status: 'Registration Successful',
-									user: user,
-								});
-							});
+									user,
+								})
+							);
 						});
 					}
 				});
 			} else {
-				res.statusCode = 400;
-				res.setHeader('Content-Type', 'application/json');
-				res.json({
+				return jsonRESPONSE(400, res, {
 					errors: {
 						password: 'Passwords do not match',
 					},
@@ -64,72 +53,33 @@ authRouter
 		}
 	});
 
-authRouter.post('/login', cors.cors, passport.authenticate('local'), (req, res) => {
-	const token = auth.getToken({ _id: req.user._id });
-	res.statusCode = 200;
-	res.setHeader('Content-Type', 'application/json');
-	res.json({
-		success: true,
-		token: token,
-		status: 'You are successfully logged in!',
-		user: req.user,
-	});
-});
-
 authRouter
 	.route('/google/token')
 	.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
-	.get(cors.corsWithOptions, passport.authenticate('google-token'), (req, res) => {
-		const token = auth.getToken({ _id: req.user._id });
-		res.statusCode = 200;
-		res.setHeader('Content-Type', 'application/json');
-		res.json({
+	.get(cors.corsWithOptions, passport.authenticate('google-token'), (req, res) =>
+		jsonRESPONSE(200, res, {
 			success: true,
-			token: token,
+			token: auth.getToken({ _id: req.user._id }),
 			status: 'You are successfully logged in!',
 			user: req.user,
-		});
-	});
+		})
+	);
 
 authRouter
 	.route('/facebook/token')
 	.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
-	.get(cors.corsWithOptions, passport.authenticate('facebook-token'), (req, res) => {
-		const token = auth.getToken({ _id: req.user._id });
-		res.statusCode = 200;
-		res.setHeader('Content-Type', 'application/json');
-		res.json({
+	.get(cors.corsWithOptions, passport.authenticate('facebook-token'), (req, res) =>
+		jsonRESPONSE(200, res, {
 			success: true,
-			token: token,
+			token: auth.getToken({ _id: req.user._id }),
 			status: 'You are successfully logged in!',
 			user: req.user,
-		});
-	});
-
-authRouter
-	.route('/change-password')
-	.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
-	.post(cors.cors, passport.authenticate('local'), (req, res) => {
-		User.findByUsername(req.user.email).then((user) => {
-			const { newPassword, confirmNewPassword } = req.body;
-			if (newPassword === confirmNewPassword) {
-				user.setPassword(newPassword, () => {
-					user.save();
-
-					res.statusCode = 200;
-					res.setHeader('Content-Type', 'application/json');
-					res.json({
-						user: req.user,
-						status: 'Password updated!',
-					});
-				});
-			}
-		});
-	});
+		})
+	);
 
 authRouter
 	.route('/spotify/token')
-	.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
+	.options(cors.corsWithOptions, (_, res) => res.sendStatus(200))
 	.post(cors.corsWithOptions, (req, res, next) => {
 		if (req.body.token) {
 			const bearer = `Bearer ${req.body.token}`;
@@ -139,26 +89,20 @@ authRouter
 						Authorization: bearer,
 					},
 				})
-				.then((spotifyResponse) => {
-					const profile = spotifyResponse.data;
+				.then(({ data: profile }) => {
 					User.findOne({ spotifyId: profile.id }, (err, user) => {
 						if (err) {
-							res.statusCode = 500;
-							res.setHeader('Content-Type', 'application/json');
-							res.json({
+							return jsonRESPONSE(500, res, {
 								success: false,
 								status: 'There was an error',
 								errorMsg: err,
 							});
 						}
 						if (!err && user) {
-							const token = auth.getToken({ _id: user._id });
-							res.statusCode = 200;
-							res.setHeader('Content-Type', 'application/json');
-							res.json({
+							return jsonRESPONSE(200, res, {
 								success: true,
 								status: 'You are successfully logged in!',
-								token,
+								token: auth.getToken({ _id: user._id }),
 								user,
 							});
 						} else {
@@ -169,13 +113,10 @@ authRouter
 							});
 							user.save();
 
-							const token = auth.getToken({ _id: user._id });
-							res.statusCode = 200;
-							res.setHeader('Content-Type', 'application/json');
-							res.json({
+							return jsonRESPONSE(200, res, {
 								success: true,
 								status: 'You are successfully logged in!',
-								token,
+								token: auth.getToken({ _id: user._id }),
 								user,
 							});
 						}
@@ -183,6 +124,33 @@ authRouter
 				})
 				.catch((err) => next(err));
 		}
+	});
+
+authRouter.post('/login', cors.cors, passport.authenticate('local'), (req, res) =>
+	jsonRESPONSE(200, res, {
+		success: true,
+		token: auth.getToken({ _id: req.user._id }),
+		status: 'You are successfully logged in!',
+		user: req.user,
+	})
+);
+
+authRouter
+	.route('/change-password')
+	.options(cors.corsWithOptions, (req, res) => res.sendStatus(200))
+	.post(cors.cors, passport.authenticate('local'), (req, res) => {
+		User.findByUsername(req.user.email).then((user) => {
+			const { newPassword, confirmNewPassword } = req.body;
+			if (newPassword === confirmNewPassword) {
+				user.setPassword(newPassword, () => {
+					user.save();
+					return jsonRESPONSE(200, res, {
+						user: req.user,
+						status: 'Password updated!',
+					});
+				});
+			}
+		});
 	});
 
 module.exports = authRouter;

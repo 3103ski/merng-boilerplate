@@ -1,11 +1,12 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import React, { useState } from 'react';
 
+//~~~  Other Package Imports
 import { Button, Grid } from 'semantic-ui-react';
 
-import { BasicCard, FormModal, UpdatePasswordForm, UpdateAuthEmail, Loader } from '../';
-
-//•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
-//•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
+//~~~  Local Components
+import { BasicCard, FormModal, UpdatePasswordForm, UpdateAuthEmailForm, Loader } from '../';
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 export default function LoginSettings({ loading, user }) {
 	const methodOfAuthentication = (() => {
@@ -28,9 +29,9 @@ export default function LoginSettings({ loading, user }) {
 	})();
 }
 
-//•••••••••••••••••••••
-// Local Components
-//•••••••••••••••••••••
+/**
+ * ----> LOCAL COMPONENTS
+ */
 
 function OAuthInfo({ user, method, loading }) {
 	return !loading ? (
@@ -46,7 +47,7 @@ function LocalAuthSettings({ user, loading }) {
 
 	return (
 		<>
-			<BasicCard centerSelf title={'User Settings'}>
+			<BasicCard centerSelf title={'Login Settings'}>
 				<Grid>
 					<Grid.Column width={16}>
 						{loading ? <Loader /> : <p>Email Address: {user.email}</p>}
@@ -73,7 +74,7 @@ function LocalAuthSettings({ user, loading }) {
 			/>
 			<FormModal
 				header='UpdateInfo'
-				formComponent={UpdateAuthEmail}
+				formComponent={UpdateAuthEmailForm}
 				isOpen={isUpdatingInfo}
 				setIsOpen={setIsUpdatingInfo}
 				size='tiny'

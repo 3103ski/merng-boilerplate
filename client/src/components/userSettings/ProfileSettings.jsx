@@ -1,21 +1,19 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import React, { useState } from 'react';
 
+//~~~ Other Package Imports
 import { Button, Grid } from 'semantic-ui-react';
 
-import {
-	BasicCard,
-	FormModal,
-	UpdatePasswordForm,
-	UpdateUserInfoForm,
-	Loader,
-} from '../../../components/';
+//~~~  Local Components
+import { BasicCard, FormModal, Loader, UpdateUserProfileForm } from '../../components/';
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 export default function ProfileSettings({ loading, user }) {
 	const [isUpdatingProfile, setIsUpdatingPassword] = useState(false);
 
 	return (
 		<>
-			<BasicCard centerSelf title={'User Settings'}>
+			<BasicCard centerSelf title={'Profile Settings'}>
 				<Grid>
 					<Grid.Column width={16}>
 						{loading ? <Loader /> : <p>Display Name: {user.displayName}</p>}
@@ -29,8 +27,9 @@ export default function ProfileSettings({ loading, user }) {
 				</Grid>
 			</BasicCard>
 			<FormModal
-				header='Update Password'
-				formComponent={UpdatePasswordForm}
+				header='Edit Profile'
+				user={!loading ? user : null}
+				formComponent={UpdateUserProfileForm}
 				isOpen={isUpdatingProfile}
 				setIsOpen={setIsUpdatingPassword}
 				size='tiny'

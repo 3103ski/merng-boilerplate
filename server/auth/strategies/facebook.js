@@ -12,7 +12,8 @@ module.exports.facebookPassport = passport.use(
 			clientSecret: FACEBOOK_CLIENT_SECRET,
 			fbGraphVersion: 'v3.0',
 		},
-		function (accessToken, refreshToken, profile, done) {
+
+		function (_, __, profile, done) {
 			User.findOne({ facebookId: profile.id }, async (err, user) => {
 				if (err) {
 					return done(err, false);
