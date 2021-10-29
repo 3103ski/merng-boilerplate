@@ -1,28 +1,22 @@
-import axios from 'axios';
+//~~~
+import React, { useContext } from 'react';
+//~~~
 import GoogleLogin from 'react-google-login';
 import icon from './google.png';
-
+//~~~
 import { GOOGLE_CLIENT_ID, USE_OAUTH } from '../../../../config';
-import { SERVER_URL, GOOGLE_AUTH, LOGIN_SUCCES_REDIRECT } from '../../../../routes.js';
+import { GOOGLE_AUTH } from '../../../../routes.js';
+import { AuthContext } from '../../../../contexts/';
+//~~~
 import * as style from '../oAuthButtons.module.scss';
+//~~~
 
-export default function GoogleAuthButton({ authStart, authSuccess, authError, history }) {
-	const googleResponseCallback = async ({ tokenId }) => {
-		await authStart();
+export default function GoogleAuthButton({ history }) {
+	const { authRegisterApi } = useContext(AuthContext);
 
-		return axios
-			.get(SERVER_URL + GOOGLE_AUTH + tokenId)
-			.then(async (res) => {
-				if (res.data.success) {
-					authSuccess(res.data.token, res.data.user._id);
-				}
-			})
-			.then(() => {
-				return history.push(LOGIN_SUCCES_REDIRECT);
-			})
-			.catch((err) => {
-				authError(err);
-			});
+	const googleResponseCallback = ({ tokenId }) => {
+		const authEndpoint = GOOGLE_AUTH + tokenId;
+		return authRegisterApi({ authEndpoint, method: 'get' }, history);
 	};
 
 	return USE_OAUTH.google ? (

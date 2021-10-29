@@ -3,12 +3,12 @@ const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
-const cors = require('./auth/cors.js');
 
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./graphql/typeDefs');
 const resolvers = require('./graphql/resolvers');
 
+const cors = require('./auth/cors.js');
 const { MONGODB } = require('./config');
 const authRouter = require('./auth/authRoutes.js');
 
@@ -54,7 +54,10 @@ app.use(passport.initialize());
 
 app.use((req, res, next) => {
 	res.header('Access-Control-Allow-Origin', `http://${process.env.CLIENT_URL}`);
-	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+	res.header(
+		'Access-Control-Allow-Headers',
+		'Origin, X-Requested-With, Content-Type, Accept, headers'
+	);
 	next();
 });
 

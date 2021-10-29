@@ -11,8 +11,7 @@ import {
 } from '../../../components/';
 
 export default function ProfileSettings({ loading, user }) {
-	const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
-	const [isUpdatingInfo, setIsUpdatingInfo] = useState(false);
+	const [isUpdatingProfile, setIsUpdatingPassword] = useState(false);
 
 	return (
 		<>
@@ -24,12 +23,7 @@ export default function ProfileSettings({ loading, user }) {
 
 					<Grid.Column width={9}>
 						<Button size='tiny' onClick={() => setIsUpdatingPassword(true)}>
-							Change Password
-						</Button>
-					</Grid.Column>
-					<Grid.Column width={7}>
-						<Button size='tiny' onClick={() => setIsUpdatingInfo(true)} color='teal'>
-							Update Info
+							Edit Profile
 						</Button>
 					</Grid.Column>
 				</Grid>
@@ -37,17 +31,9 @@ export default function ProfileSettings({ loading, user }) {
 			<FormModal
 				header='Update Password'
 				formComponent={UpdatePasswordForm}
-				isOpen={isUpdatingPassword}
+				isOpen={isUpdatingProfile}
 				setIsOpen={setIsUpdatingPassword}
 				size='tiny'
-			/>
-			<FormModal
-				header='UpdateInfo'
-				formComponent={UpdateUserInfoForm}
-				isOpen={isUpdatingInfo}
-				setIsOpen={setIsUpdatingInfo}
-				size='tiny'
-				user={!loading ? user : null}
 			/>
 		</>
 	);

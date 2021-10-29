@@ -1,10 +1,10 @@
 // Forms
-export { default as LoginForm } from './forms/Login.jsx';
-export { default as RegisterUserForm } from './forms/Register.jsx';
-export { default as UpdatePasswordForm } from './forms/UpdatePassword.jsx';
-export { default as UpdateAuthEmail } from './forms/UpdateAuthEmail.jsx';
+export { default as LoginForm } from './forms/authForms/Login.jsx';
+export { default as RegisterUserForm } from './forms/authForms/Register.jsx';
+export { default as UpdatePasswordForm } from './forms/userProfileForms/UpdatePassword.jsx';
+export { default as UpdateAuthEmail } from './forms/userProfileForms/UpdateAuthEmail.jsx';
 
-export { default as FormErrors } from './forms/FormErrors.jsx';
+export { default as GQLFormErrors } from './forms/GQLFormErrors.jsx';
 
 // Navigation
 export { default as MainNavigation } from './navigation/mainNav/MainNav.jsx';
@@ -17,4 +17,4 @@ export { default as FormModal } from './genericComponents/formModal/FormModal.js
 export { default as Button } from './genericComponents/button/Button.jsx';
 
 // Presentational Components
-export { default as LoginSettings } from './presentationalComponents/userSettings/LoginSettings.jsx';
+export { default as LoginSettings } from './userSettings/LoginSettings.jsx';

@@ -1,13 +1,19 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import React, { useEffect } from 'react';
-
-import { Form, Button } from 'semantic-ui-react';
+//~~~  React & Hooks
 import { useMutation } from '@apollo/client';
+import { useForm, useGQLFormErrors } from '../../../hooks';
 
-import { Loader, FormErrors } from '..';
-import { UPDATE_USER } from '../../gql';
+//~~~  Other Package Imports
+import { Form, Button } from 'semantic-ui-react';
 
-import { useForm, useGQLFormErrors } from '../../hooks';
-import { handleOnEnter } from '../../util/helperFunctions.js';
+//~~~  Local Components
+import { Loader, GQLFormErrors } from '../../../components/';
+
+//~~~  Variables & Helpers
+import { UPDATE_USER } from '../../../gql/';
+import { handleOnEnter } from '../../../util/helperFunctions.js';
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 export default function UpdateUserInfoForm({ callback, user }) {
 	const { values, onSubmit, onChange } = useForm(updateUserInfoHandler, {
@@ -60,7 +66,7 @@ export default function UpdateUserInfoForm({ callback, user }) {
 					Update
 				</Button>
 			</Form>
-			<FormErrors errors={errors} />
+			<GQLFormErrors errors={errors} />
 		</>
 	);
 }

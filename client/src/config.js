@@ -24,7 +24,7 @@ export const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 
 export const USE_OAUTH = {
 	google: true,
-	facebook: true,
+	facebook: false,
 	spotify: true,
 };
 

@@ -53,7 +53,7 @@ export const SERVER_URL = `http://${process.env.REACT_APP_SERVER_URL}`;
 export const GQL_SERVER_URL = `http://${process.env.REACT_APP_GQL_SERVER_URL}`;
 
 /**
- * ----> OAUTH ENDPOINTS
+ * ----> AUTH ENDPOINTS
  */
 
 export const SPOTIFY_AUTH = `/${authDir}/spotify/token`;

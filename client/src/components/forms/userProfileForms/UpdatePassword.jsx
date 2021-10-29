@@ -1,16 +1,22 @@
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import React, { useEffect, useState, useContext } from 'react';
-
+//~~~  React & Hooks
 import { useQuery } from '@apollo/client';
+import { useForm } from '../../../hooks';
+
+//~~~  Other Package Imports
 import axios from 'axios';
 import { Form, Button } from 'semantic-ui-react';
 
-import { Loader } from '../../components/';
+//~~~  Local Components
+import { Loader, GQLFormErrors } from '../../../components/';
 
-import { useForm } from '../../hooks';
-import { GET_USER } from '../../gql/';
-import { AuthContext } from '../../contexts/';
-import { SERVER_URL, LOCAL_PW_CHANGE } from '../../routes.js';
-import { handleOnEnter } from '../../util/helperFunctions.js';
+//~~~  Variables, Contexts, & Helpers
+import { GET_USER } from '../../../gql/';
+import { AuthContext } from '../../../contexts/';
+import { SERVER_URL, LOCAL_PW_CHANGE } from '../../../routes.js';
+import { handleOnEnter } from '../../../util/helperFunctions.js';
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 export default function UpdateUserPasswordForm({ callback }) {
 	const [isLoading, setIsLoading] = useState(false);
@@ -100,7 +106,6 @@ export default function UpdateUserPasswordForm({ callback }) {
 					Update Password
 				</Button>
 			</Form>
-			{/* <FormErrors errors={errors} /> */}
 		</>
 	);
 }

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import { Button, Grid } from 'semantic-ui-react';
 
-import { BasicCard, FormModal, UpdatePasswordForm, UpdateAuthEmail, Loader } from '../..';
+import { BasicCard, FormModal, UpdatePasswordForm, UpdateAuthEmail, Loader } from '../';
 
 //•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••
 //•••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••••

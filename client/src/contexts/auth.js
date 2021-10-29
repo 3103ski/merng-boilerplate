@@ -1,8 +1,10 @@
 import React, { createContext, useReducer } from 'react';
 import jwtDecode from 'jwt-decode';
+import axios from 'axios';
 
 import { updateObj } from '../util/helperFunctions';
-import { TOKEN_TITLE } from '../config';
+import { TOKEN_TITLE } from '../config.js';
+import { LOGIN_SUCCES_REDIRECT, NO_AUTH_REDIRECT, SERVER_URL } from '../routes.js';
 
 const initialState = {
 	token: null,
@@ -68,6 +70,37 @@ const AuthProvider = (props) => {
 		return dispatch({ type: 'AUTH_ERROR', errorMsg: err });
 	};
 
+	const authRegisterApi = async ({ authEndpoint, data, method = 'post' }, history) => {
+		const url = await `${SERVER_URL}${authEndpoint}`;
+		const headers = await {
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		};
+
+		await authStart();
+
+		return axios({ url, data, headers, method })
+			.then(
+				({
+					data: {
+						success,
+						token,
+						user: { _id },
+					},
+				}) => {
+					if (success) {
+						authSuccess(token, _id);
+						return history.push(LOGIN_SUCCES_REDIRECT);
+					}
+				}
+			)
+			.catch((err) => {
+				authError(err);
+				return history.push(NO_AUTH_REDIRECT);
+			});
+	};
+
 	const logout = () => {
 		localStorage.removeItem(TOKEN_TITLE);
 		return dispatch({ type: 'LOGOUT' });
@@ -83,6 +116,7 @@ const AuthProvider = (props) => {
 				authStart,
 				authSuccess,
 				authError,
+				authRegisterApi,
 				logout,
 			}}
 			{...props}
