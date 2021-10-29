@@ -9,7 +9,7 @@ import axios from 'axios';
 import { Form, Button } from 'semantic-ui-react';
 
 //~~~  Local Components
-import { Loader, GQLFormErrors } from '../../../components/';
+import { Loader } from '../../../components/';
 
 //~~~  Variables, Contexts, & Helpers
 import { GET_USER } from '../../../gql/';

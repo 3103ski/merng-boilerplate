@@ -17,14 +17,11 @@ import {
 } from '../../../routes.js';
 
 export default function Navbar() {
-	const { token, logout } = useContext(AuthContext);
-	const [landingLabel, logoutLabel] = ['landing', 'logout'];
-
 	const path = returnPathSegment(useLocation().pathname, 0, true);
 	const [activeItem, setActiveItem] = useState(path);
+	const { token, logout } = useContext(AuthContext);
 
-	const handleItemClick = (_, { name }) => setActiveItem(slugToText(name));
-
+	// Local Components
 	function MenuLink({ to, right, name, onClick }) {
 		return (
 			<Menu.Item
@@ -38,33 +35,65 @@ export default function Navbar() {
 		);
 	}
 
+	// --- Visible Wihout A Token
+	function PublicButtonsLeftSide() {
+		return (
+			<>
+				<MenuLink to={LANDING} name={'landing'} />
+			</>
+		);
+	}
+
+	function NoTokenButtonsRightSide() {
+		return !token ? (
+			<>
+				<MenuLink to={LOGIN} name={LOGIN} right />
+				<MenuLink to={REGISTER} name={REGISTER} />
+			</>
+		) : null;
+	}
+
+	// --- Links only show WITH TOKEN available
+	function WithTokenButtonsLeftSide() {
+		return token ? (
+			<>
+				<MenuLink to={DASHBOARD} name={DASHBOARD} />
+			</>
+		) : null;
+	}
+
+	function WithTokenButtonsRightSide({ logout }) {
+		return token ? (
+			<>
+				<MenuLink to={`${USER_SETTINGS}${SETTINGS_PROFILE}`} name={USER_SETTINGS} />
+				<MenuLink to={LOGIN} name={'logout'} onClick={logout} />
+			</>
+		) : null;
+	}
+
+	// Local Handlers
 	function handleOnLogoutClick() {
 		logout();
 		setActiveItem(slugToText(LOGIN));
 	}
 
+	function handleItemClick(_, { name }) {
+		return setActiveItem(slugToText(name));
+	}
+
+	// Side Effects
 	useEffect(() => {
 		setActiveItem(path);
 	}, [path]);
 
 	return (
 		<Menu className={style.Container} inverted>
-			<MenuLink to={LANDING} name={landingLabel} />
-
-			{token ? <MenuLink to={DASHBOARD} name={DASHBOARD} /> : null}
+			<PublicButtonsLeftSide />
+			<WithTokenButtonsLeftSide />
 
 			<Menu.Menu position={'right'}>
-				{!token ? (
-					<>
-						<MenuLink to={LOGIN} name={LOGIN} right />
-						<MenuLink to={REGISTER} name={REGISTER} />
-					</>
-				) : (
-					<>
-						<MenuLink to={`${USER_SETTINGS}${SETTINGS_PROFILE}`} name={USER_SETTINGS} />
-						<MenuLink to={LOGIN} name={logoutLabel} onClick={handleOnLogoutClick} />
-					</>
-				)}
+				<NoTokenButtonsRightSide />
+				<WithTokenButtonsRightSide logout={handleOnLogoutClick} />
 			</Menu.Menu>
 		</Menu>
 	);

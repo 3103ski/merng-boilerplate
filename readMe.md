@@ -30,13 +30,13 @@ one inside of the `server` and `client` folders respectively.
 -   `graphql v15.6.1`
 -   `express v4.17.1`
 -   `node v14.9.0`
+-   `@apollo/client v3.3.21`
+-   `apollo-link-context v1.0.20`
 
 <br>
 
 ### Other Tech
 
--   `@apollo/client v3.3.21`
--   `apollo-link-context v1.0.20`
 -   _Apollo Server_: Used on client and server to impliment `GraphQL`
 -   _MongoDB Atlas_: hosting for Mongo DB
 -   _Sass_: I use sass modules in each component; but also like to manage a global sass folder for

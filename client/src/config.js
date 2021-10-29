@@ -40,7 +40,7 @@ export const USE_OAUTH = {
 //    .env
 //••••••••••••••••
 //   --- !!! ---  IMPORTANT :: .env will be ignored by git. Make sure you create these variables
-//   --- !!! ---  on your production server. React env vars require they begin with 'REACT_APP_' as
+//   --- !!! ---  on your production server. React process.env vars require they begin with 'REACT_APP_' as
 //   --- !!! ---  below, so do not change for preference and include in new vars you may add.
 
 // REACT_APP_SPOTIFY_CLIENT_ID =
