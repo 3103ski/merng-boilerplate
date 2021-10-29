@@ -141,7 +141,6 @@ authRouter
 				})
 				.then((spotifyResponse) => {
 					const profile = spotifyResponse.data;
-					console.log(profile);
 					User.findOne({ spotifyId: profile.id }, (err, user) => {
 						if (err) {
 							res.statusCode = 500;

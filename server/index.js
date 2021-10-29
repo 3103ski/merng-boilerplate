@@ -1,9 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const path = require('path');
 const cors = require('./auth/cors.js');
-require('dotenv').config();
 
 const { ApolloServer } = require('apollo-server-express');
 const typeDefs = require('./graphql/typeDefs');
@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(passport.initialize());
 
 app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', 'http://localhost:3000');
+	res.header('Access-Control-Allow-Origin', `http://${process.env.CLIENT_URL}`);
 	res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
 	next();
 });

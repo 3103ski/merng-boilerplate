@@ -1,12 +1,12 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-
 import { Menu } from 'semantic-ui-react';
 
-import { AuthContext } from '../../../contexts/auth';
 import { slugToText, returnPathSegment } from '../../../util/helperFunctions';
+
 import * as style from './mainNav.module.scss';
 
+import { AuthContext } from '../../../contexts/auth';
 import {
 	LANDING,
 	LOGIN,
@@ -18,7 +18,7 @@ import {
 
 export default function Navbar() {
 	const { token, logout } = useContext(AuthContext);
-	const [LANDING_LABEL, LOGOUT_LABEL] = ['landing', 'logout'];
+	const [landingLabel, logoutLabel] = ['landing', 'logout'];
 
 	const path = returnPathSegment(useLocation().pathname, 0, true);
 	const [activeItem, setActiveItem] = useState(path);
@@ -49,7 +49,7 @@ export default function Navbar() {
 
 	return (
 		<Menu className={style.Container} inverted>
-			<MenuLink to={LANDING} name={LANDING_LABEL} />
+			<MenuLink to={LANDING} name={landingLabel} />
 
 			{token ? <MenuLink to={DASHBOARD} name={DASHBOARD} /> : null}
 
@@ -62,7 +62,7 @@ export default function Navbar() {
 				) : (
 					<>
 						<MenuLink to={`${USER_SETTINGS}${SETTINGS_PROFILE}`} name={USER_SETTINGS} />
-						<MenuLink to={LOGIN} name={LOGOUT_LABEL} onClick={handleOnLogoutClick} />
+						<MenuLink to={LOGIN} name={logoutLabel} onClick={handleOnLogoutClick} />
 					</>
 				)}
 			</Menu.Menu>

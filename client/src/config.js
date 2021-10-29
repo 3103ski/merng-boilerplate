@@ -1,7 +1,7 @@
 //•••••••••
 // GLOBAL
 //•••••••••
-export const TOKEN_TITLE = 'jwtToken';
+export const TOKEN_TITLE = process.env.REACT_APP_TOKEN_TITLE || 'jwtToken';
 
 //••••••••••••••
 // oAuth Creds
@@ -13,11 +13,10 @@ export const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
 //•••••••••••••••••
 // UI Preferences
 //•••••••••••••••••
-//**** More options available in '/client/sass/variables' */
+//**** Basic styling options available in '/client/sass/variables' */
 
 export const USE_OAUTH = {
 	google: true,
 	facebook: false,
 	spotify: true,
 };
-export const ROUND_NAV = false;

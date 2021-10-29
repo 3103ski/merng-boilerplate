@@ -1,7 +1,7 @@
 const cors = require('cors');
 
 const whitelist = [
-	'http://localhost:3000',
+	`http://${process.env.CLIENT_URL}`,
 	'http://localhost:3001',
 	'http://localhost:3003',
 	'http://localhost:3443',

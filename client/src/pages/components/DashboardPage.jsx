@@ -7,6 +7,7 @@ import { Loader } from '../../components/';
 
 import { AuthContext } from '../../contexts/';
 import { GET_USER } from '../../gql/';
+import { TOKEN_TITLE } from '../../config';
 
 export default function UserDashboard() {
 	const { userId } = useContext(AuthContext);
@@ -21,7 +22,9 @@ export default function UserDashboard() {
 			{loading ? (
 				<Loader />
 			) : !error ? (
-				<h1>{data.getUser.email} is logged in</h1>
+				<h1>
+					{data.getUser.email} is logged in with {TOKEN_TITLE}
+				</h1>
 			) : (
 				<p>oops</p>
 			)}
