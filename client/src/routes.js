@@ -1,30 +1,60 @@
-//••••••••••••••
-// Client URLS
-//••••••••••••••
+/**
+ *			!IMPORTANT :: This starter will not work as is
+ *			without creating .env file in the /client/
+ *			directory that follows the starter template 
+
+ *			See readMe.md for more info on
+ *			gathering credentials. 
+
+ *          See '/client/src/config.js'
+ *			for ~~TEMPLATE~~. 
+ */
+
+//•••••••••••••••••••••••••••••••••••
+// ••••••••  CLIENT URLS  •••••••••••
+//•••••••••••••••••••••••••••••••••••
 
 export const BASE_URL = `http://${process.env.REACT_APP_BASE_URL}`;
 
-// Routes
+/**
+ * ---->  BASE ROUTES
+ */
+
 export const LANDING = `/`;
 export const LOGIN = `/login`;
 export const REGISTER = `/register`;
 export const DASHBOARD = `/dashboard`;
-export const USER_SETTINGS = `/user-settings`;
+export const USER_SETTINGS = `/settings`;
 
-// User Settings Sub-Routes
-export const SETTINGS_PROFILE = `/profile`;
+/**
+ * ---->  SUB ROUTES
+ */
+
+// User Settings
+export const SETTINGS_PROFILE = `/edit-profile`;
 export const SETTINGS_LOGIN_INFO = `/login-info`;
 
-// Redirects
+/**
+ * ---->  REDIRECTS
+ */
 export const LOGIN_SUCCES_REDIRECT = DASHBOARD;
 export const NO_AUTH_REDIRECT = LOGIN;
 
-//••••••••••••••
-// Server Urls
-//••••••••••••••
+//•••••••••••••••••••••••••••••••••••
+// ••••••••  SERVER URLS  •••••••••••
+//•••••••••••••••••••••••••••••••••••
+
+/**
+ * ----> API BASE URLS
+ */
+
 const authDir = 'auth';
 export const SERVER_URL = `http://${process.env.REACT_APP_SERVER_URL}`;
 export const GQL_SERVER_URL = `http://${process.env.REACT_APP_GQL_SERVER_URL}`;
+
+/**
+ * ----> OAUTH ENDPOINTS
+ */
 
 export const SPOTIFY_AUTH = `/${authDir}/spotify/token`;
 export const FACEBOOK_AUTH = `/${authDir}/facebook/token?access_token=`;

@@ -12,6 +12,13 @@ const resolvers = require('./graphql/resolvers');
 const { MONGODB } = require('./config');
 const authRouter = require('./auth/authRoutes.js');
 
+/**
+ *
+ * 		!IMPORTANT :: Make sure you go to '/server/config.js' for details on setting
+ * 		up server .env file for app to work properly
+ *
+ */
+
 ////•••••••••••••••••
 // Setup server, database connection and port
 ////•••••••••••••••••

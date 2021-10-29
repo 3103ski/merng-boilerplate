@@ -10,6 +10,17 @@ import { LANDING, LOGIN, REGISTER, DASHBOARD, USER_SETTINGS } from './routes.js'
 import 'semantic-ui-css/semantic.min.css';
 import './App.scss';
 
+/**
+ * *** All new Route components should have a path variable that comes from routes.js ***
+ *
+ * 			These route variables are also in default use
+ * 			in '/client/src/components/navigation/[...].jsx' components
+ *
+ * 			!IMPORTANT :: Authentication will not work without setting up credentials in .env
+ * 			SEE '/client/src/config.js' for details and setup
+ *
+ */
+
 function App() {
 	return (
 		<AuthProvider>
