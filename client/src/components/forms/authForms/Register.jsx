@@ -4,10 +4,10 @@ import React, { useContext } from 'react';
 import { useForm } from '../../../hooks/';
 
 //~~~ Package Imports
-import { Form, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 //~~~ Local Components
-import { Loader } from '../../../components/';
+import { RenderBasicForm } from '../../../components/';
 import { GoogleLoginButton, SpotifyLoginButton, FacebookLoginButton } from '../oAuthButtons/';
 
 //~~~ Variables & Contexts
@@ -15,78 +15,54 @@ import { AuthContext } from '../../../contexts/auth';
 import { LOCAL_REGISTER } from '../../../routes.js';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-export default function RegisterUserForm({ history }) {
-	const { isLoading, authRegisterApi } = useContext(AuthContext);
+const formID = 'form_update_user_profile';
+const inputs = [
+	{ name: 'email', type: 'email', placeholder: 'Email' },
+	{ name: 'displayName', type: 'text', placeholder: 'Display Name' },
+	{ name: 'password', type: 'password', placeholder: 'Password' },
+	{ name: 'confirmPassword', type: 'password', placeholder: 'Confirm Password' },
+];
 
-	const {
-		values: { email, displayName, password, confirmPassword },
-		onSubmit,
-		onChange,
-	} = useForm(registerUser, {
-		email: '',
-		displayName: '',
-		password: '',
-		confirmPassword: '',
+export default function RegisterUserForm({ history }) {
+	const { isLoading, authRegisterApi, errors, clearErrors, authError } = useContext(AuthContext);
+
+	const { values, onSubmit, onChange, emptyInputErrors } = useForm(registerUser, null, {
+		onChangeCB: clearErrors,
+		setErrors: authError,
+		formArray: inputs,
 	});
 
-	async function registerUser() {
+	function registerUser() {
 		authRegisterApi(
 			{
 				authEndpoint: LOCAL_REGISTER,
-				data: {
-					email,
-					displayName,
-					password,
-					confirmPassword,
-				},
+				data: values,
 			},
 			history
 		);
 	}
 
-	return isLoading ? (
-		<Loader loadingText='Registering User' />
-	) : (
-		<>
-			<Form onSubmit={onSubmit}>
-				<Form.Input
-					type='email'
-					onChange={onChange}
-					value={email}
-					name='email'
-					placeholder='Email'
-				/>
-				<Form.Input
-					type='text'
-					onChange={onChange}
-					value={displayName}
-					name='displayName'
-					placeholder='Display Name'
-				/>
-				<Form.Input
-					type='password'
-					onChange={onChange}
-					value={password}
-					name='password'
-					placeholder='Password'
-				/>
-				<Form.Input
-					type='password'
-					onChange={onChange}
-					value={confirmPassword}
-					name='confirmPassword'
-					placeholder='Confirm Password'
-				/>
+	return (
+		<RenderBasicForm
+			id={formID}
+			inputs={inputs}
+			values={values}
+			onChange={onChange}
+			onSubmit={onSubmit}
+			isLoading={isLoading}
+			emptyInputErrors={emptyInputErrors}
+			errors={errors}
+			buttons={() => (
+				<>
+					<Button type='submit' primary>
+						Sign Up!
+					</Button>
 
-				<Button type='submit' primary>
-					Register New User
-				</Button>
-
-				{/* oAuth buttons toggle on config.js variable */}
-				<GoogleLoginButton history={history} />
-				<SpotifyLoginButton history={history} />
-				<FacebookLoginButton history={history} />
-			</Form>
-		</>
+					<GoogleLoginButton history={history} />
+					<SpotifyLoginButton history={history} />
+					<FacebookLoginButton history={history} />
+				</>
+			)}
+		/>
 	);
 }

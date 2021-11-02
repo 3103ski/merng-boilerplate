@@ -1,10 +1,10 @@
 const { User } = require('../../models');
 const bcrypt = require('bcrypt');
 const { UserInputError } = require('apollo-server-express');
-const checkAuth = require('../../util/checkAuth');
-const auth = require('../../auth/authenticate');
 const jwt = require('jsonwebtoken');
 
+const checkAuth = require('../../util/checkAuth');
+const { validateProfileInput } = require('../validators/index.js');
 const { SERCRET_KEY } = require('../../config');
 
 function generateToken(user) {
@@ -32,24 +32,22 @@ module.exports = {
 		},
 	},
 	Mutation: {
-		async updateUser(_, { updateUserInput }, context) {
-			const user = checkAuth(context);
+		async updateUser(_, { updateUserInput: profileInput }, context) {
+			const isAuthorized = checkAuth(context);
+			if (isAuthorized) {
+				const user = await User.findById(isAuthorized._id);
 
-			if (user) {
-				if (updateUserInput.password) {
-					throw new error(
-						'You should not be using this GQL endpoint to update passwords'
-					);
-				}
+				// ---> Validate profile input
+				const profileInputError = await validateProfileInput(profileInput, user);
+				if (profileInputError) throw profileInputError;
 
+				// ----> Update and return user
 				await User.findByIdAndUpdate(user._id, {
 					$set: {
-						...updateUserInput,
+						...profileInput,
 					},
 				});
-
 				const updatedUser = await User.findById(user._id);
-
 				return updatedUser;
 			}
 		},

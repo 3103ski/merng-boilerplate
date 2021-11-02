@@ -1,26 +1,31 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 import React, { useEffect } from 'react';
 //~~~  React & Hooks
 import { useMutation } from '@apollo/client';
 import { useForm, useGQLFormErrors } from '../../../hooks';
 
 //~~~  Other Package Imports
-import { Form, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 //~~~  Local Components
-import { Loader, GQLFormErrors } from '../..';
+import { RenderBasicForm } from '../../../components/';
 
 //~~~  Variables & Helpers
 import { UPDATE_USER } from '../../../gql';
 import { handleOnEnter } from '../../../util/helperFunctions.js';
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+const formID = 'form_update_user_email';
+const inputs = [{ name: 'email', type: 'email', placeholder: 'Enter an email address' }];
 
 export default function UpdateAuthEmail({ callback, user }) {
-	const { values, onSubmit, onChange } = useForm(updateUserInfoHandler, {
-		email: user.email,
-	});
-
 	const { errors, setFormError, clearErrors } = useGQLFormErrors();
+
+	const { values, onSubmit, onChange, emptyInputErrors } = useForm(
+		updateUserInfoHandler,
+		{
+			email: user.email,
+		},
+		{ onChangeCB: clearErrors, setErrors: setFormError }
+	);
 
 	const [updateUser, { loading }] = useMutation(UPDATE_USER, {
 		update(_, { data: { updateUser: userData } }) {
@@ -32,47 +37,38 @@ export default function UpdateAuthEmail({ callback, user }) {
 		variables: values,
 	});
 
-	async function updateUserInfoHandler() {
-		await clearErrors();
-		updateUser();
+	function updateUserInfoHandler() {
+		clearErrors();
+		if (emptyInputErrors.length > 0) return setFormError({ [emptyInputErrors[0]]: `Missing fields` });
+		return updateUser();
 	}
 
 	const updateOnEnterHandler = (e) => handleOnEnter(e, updateUserInfoHandler);
 
 	useEffect(() => {
-		/**
-		 * 	for whatever reason, the submit callback doesn't fire on enter
-		 * 	when the form exists inside of semantic UI modal component.
-		 */
-
-		const form = document.getElementById('form_update_user_info');
+		const form = document.getElementById(formID);
 		form.addEventListener('keydown', updateOnEnterHandler);
-
 		return () => form.removeEventListener('keydown', updateOnEnterHandler);
 	});
 
 	return (
-		<>
-			<Form id='form_update_user_info' onSubmit={onSubmit}>
-				{loading ? (
-					<Loader loadingText='Updating Info' />
-				) : (
-					<>
-						<Form.Input
-							type='email'
-							onChange={onChange}
-							value={values.email}
-							name='email'
-							placeholder='Enter Email'
-						/>
-					</>
-				)}
-				<Button onClick={callback}>Cancel</Button>
-				<Button type='submit' primary>
-					Update
-				</Button>
-			</Form>
-			<GQLFormErrors errors={errors} />
-		</>
+		<RenderBasicForm
+			id={formID}
+			inputs={inputs}
+			values={values}
+			onChange={onChange}
+			onSubmit={onSubmit}
+			isLoading={loading}
+			emptyInputErrors={emptyInputErrors}
+			errors={errors}
+			buttons={() => (
+				<>
+					<Button onClick={callback}>Cancel</Button>
+					<Button type='submit' primary>
+						Update
+					</Button>
+				</>
+			)}
+		/>
 	);
 }

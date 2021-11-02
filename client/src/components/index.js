@@ -5,7 +5,8 @@ export { default as UpdatePasswordForm } from './forms/updateForms/UpdatePasswor
 export { default as UpdateAuthEmailForm } from './forms/updateForms/UpdateAuthEmail.jsx';
 export { default as UpdateUserProfileForm } from './forms/updateForms/UpdateUserProfile.jsx';
 
-export { default as GQLFormErrors } from './forms/GQLFormErrors.jsx';
+export { default as FormErrors } from './forms/FormErrors.jsx';
+export { default as RenderBasicForm } from './forms/RenderBasicForm.jsx';
 
 // Navigation
 export { default as MainNavigation } from './navigation/mainNav/MainNav.jsx';

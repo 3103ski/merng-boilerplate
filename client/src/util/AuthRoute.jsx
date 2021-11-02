@@ -14,11 +14,7 @@ const AuthRoute = ({ path, component: Component, ...rest }) => {
 				if (!token) {
 					localStorage.removeItem(TOKEN_TITLE);
 				}
-				return !token ? (
-					<Redirect to={NO_AUTH_REDIRECT} />
-				) : (
-					<Component {...props} {...rest} />
-				);
+				return !token ? <Redirect to={NO_AUTH_REDIRECT} /> : <Component {...props} {...rest} />;
 			}}
 		/>
 	);

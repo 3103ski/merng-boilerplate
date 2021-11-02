@@ -11,6 +11,7 @@ const resolvers = require('./graphql/resolvers');
 const cors = require('./auth/cors.js');
 const { MONGODB } = require('./config');
 const authRouter = require('./auth/authRoutes.js');
+const { jsonRESPONSE } = require('./util/responseHelpers.js');
 
 /**
  *
@@ -81,13 +82,16 @@ app.use(function (req, res, next) {
 });
 
 app.use(function (err, req, res, next) {
+	console.log('I got error!!', err);
 	// set locals, only providing error in development
+
 	res.locals.message = err.message;
 	res.locals.error = req.app.get('env') === 'development' ? err : {};
 
 	// render the error page
-	res.status(err.status || 500);
-	res.json({ error: err });
+	// res.status(err.status || 500);
+	// res.json({ error: err });
+	return jsonRESPONSE(500, res, err);
 });
 
 ////•••••••••••••••••

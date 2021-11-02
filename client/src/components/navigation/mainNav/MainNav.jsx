@@ -7,14 +7,7 @@ import { slugToText, returnPathSegment } from '../../../util/helperFunctions';
 import * as style from './mainNav.module.scss';
 
 import { AuthContext } from '../../../contexts/auth';
-import {
-	LANDING,
-	LOGIN,
-	REGISTER,
-	DASHBOARD,
-	USER_SETTINGS,
-	SETTINGS_PROFILE,
-} from '../../../routes.js';
+import { LANDING, LOGIN, REGISTER, DASHBOARD, USER_SETTINGS, SETTINGS_PROFILE } from '../../../routes.js';
 
 export default function Navbar() {
 	const path = returnPathSegment(useLocation().pathname, 0, true);
@@ -22,64 +15,55 @@ export default function Navbar() {
 	const { token, logout } = useContext(AuthContext);
 
 	// Local Components
-	function MenuLink({ to, right, name, onClick }) {
-		return (
-			<Menu.Item
-				active={activeItem === slugToText(name)}
-				name={name}
-				position={right ? 'right' : null}
-				onClick={onClick ? onClick : handleItemClick}
-				as={Link}
-				to={to}
-			/>
-		);
-	}
+	const MenuLink = ({ to, right, name, onClick }) => (
+		<Menu.Item
+			active={activeItem === slugToText(name)}
+			name={name}
+			position={right ? 'right' : null}
+			onClick={onClick ? onClick : handleItemClick}
+			as={Link}
+			to={to}
+		/>
+	);
 
 	// --- Visible Wihout A Token
-	function PublicButtonsLeftSide() {
-		return (
-			<>
-				<MenuLink to={LANDING} name={'landing'} />
-			</>
-		);
-	}
+	const PublicButtonsLeftSide = () => (
+		<>
+			<MenuLink to={LANDING} name={'landing'} />
+		</>
+	);
 
-	function NoTokenButtonsRightSide() {
-		return !token ? (
+	const NoTokenButtonsRightSide = () =>
+		!token ? (
 			<>
 				<MenuLink to={LOGIN} name={LOGIN} right />
 				<MenuLink to={REGISTER} name={REGISTER} />
 			</>
 		) : null;
-	}
 
 	// --- Links only show WITH TOKEN available
-	function WithTokenButtonsLeftSide() {
-		return token ? (
+	const WithTokenButtonsLeftSide = () =>
+		token ? (
 			<>
 				<MenuLink to={DASHBOARD} name={DASHBOARD} />
 			</>
 		) : null;
-	}
 
-	function WithTokenButtonsRightSide({ logout }) {
-		return token ? (
+	const WithTokenButtonsRightSide = ({ logout }) =>
+		token ? (
 			<>
 				<MenuLink to={`${USER_SETTINGS}${SETTINGS_PROFILE}`} name={USER_SETTINGS} />
 				<MenuLink to={LOGIN} name={'logout'} onClick={logout} />
 			</>
 		) : null;
-	}
 
 	// Local Handlers
-	function handleOnLogoutClick() {
+	const handleOnLogoutClick = () => {
 		logout();
 		setActiveItem(slugToText(LOGIN));
-	}
+	};
 
-	function handleItemClick(_, { name }) {
-		return setActiveItem(slugToText(name));
-	}
+	const handleItemClick = (_, { name }) => setActiveItem(slugToText(name));
 
 	// Side Effects
 	useEffect(() => {

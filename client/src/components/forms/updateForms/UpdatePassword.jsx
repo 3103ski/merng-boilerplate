@@ -1,111 +1,88 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useContext } from 'react';
 //~~~  React & Hooks
-import { useQuery } from '@apollo/client';
 import { useForm } from '../../../hooks';
 
 //~~~  Other Package Imports
-import axios from 'axios';
-import { Form, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 //~~~  Local Components
-import { Loader } from '../../../components/';
+import { RenderBasicForm } from '../../../components/';
 
 //~~~  Variables, Contexts, & Helpers
-import { GET_USER } from '../../../gql/';
 import { AuthContext } from '../../../contexts/';
-import { SERVER_URL, LOCAL_PW_CHANGE } from '../../../routes.js';
+import { LOCAL_PW_CHANGE } from '../../../routes.js';
 import { handleOnEnter } from '../../../util/helperFunctions.js';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-export default function UpdateUserPasswordForm({ callback }) {
-	const [isLoading, setIsLoading] = useState(false);
-	const { token, userId } = useContext(AuthContext);
-	const { values, onSubmit, onChange } = useForm(updatePassword, {
-		password: '',
-		newPassword: '',
-		confirmNewPassword: '',
+const formID = 'form_update_user_password';
+const inputs = [
+	{ name: 'password', type: 'password', placeholder: 'Password' },
+	{ name: 'newPassword', type: 'password', placeholder: 'New Password' },
+	{ name: 'confirmNewPassword', type: 'password', placeholder: 'Confirm New Password' },
+];
+
+export default function UpdateUserPasswordForm({ callback, userEmail }) {
+	// Setup error control and form actions
+	const { isLoading, token, authRegisterApi, errors, setErrors, clearErrors } = useContext(AuthContext);
+
+	// Setup useForm hook; no initial state so initial state
+	// gets 'null' and options object gets 'inputs' as 'formArray'
+	const { values, onSubmit, onChange, emptyInputErrors } = useForm(updatePassword, null, {
+		onChangeCB: clearErrors,
+		formArray: inputs,
+		setErrors,
 	});
 
-	const { data } = useQuery(GET_USER, {
-		variables: {
-			userId,
-		},
-	});
-
-	async function updatePassword() {
-		if (token && data.getUser) {
-			setIsLoading(true);
-			axios
-				.post(
-					SERVER_URL + LOCAL_PW_CHANGE,
-					{
-						email: data.getUser.email,
-						password: values.password,
-						newPassword: values.newPassword,
-						confirmNewPassword: values.confirmNewPassword,
+	// Form handler
+	function updatePassword() {
+		if (token && userEmail) {
+			authRegisterApi(
+				{
+					authEndpoint: LOCAL_PW_CHANGE,
+					data: {
+						email: userEmail,
+						...values,
 					},
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					}
-				)
-				.then((res) => {
-					setIsLoading(false);
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				},
+				null,
+				() => {
+					window.alert('password updated');
 					callback();
-				})
-				.then(() => window.alert('Password Updated!'))
-				.catch((err) => {
-					setIsLoading(false);
-					window.alert('Something went wrong');
-				});
+				}
+			);
 		}
 	}
 
+	// Form is inside modal, mount listener for enter (modal bug; maybe SemUI Modal)
 	const updatePasswordOnEnterHandler = (e) => handleOnEnter(e, updatePassword);
-
 	useEffect(() => {
-		const form = document.getElementById('form_update_password');
+		const form = document.getElementById(formID);
 		form.addEventListener('keydown', updatePasswordOnEnterHandler);
 		return () => form.removeEventListener('keydown', updatePasswordOnEnterHandler);
 	});
 
 	return (
-		<>
-			<Form id='form_update_password' onSubmit={onSubmit}>
-				{isLoading ? (
-					<Loader loadingText='Updating Password' />
-				) : (
-					<>
-						<Form.Input
-							type='password'
-							onChange={onChange}
-							value={values.password}
-							name='password'
-							placeholder='Current Password'
-						/>
-						<Form.Input
-							type='password'
-							onChange={onChange}
-							value={values.newPassword}
-							name='newPassword'
-							placeholder='New Password'
-						/>
-						<Form.Input
-							type='password'
-							onChange={onChange}
-							value={values.confirmNewPassword}
-							name='confirmNewPassword'
-							placeholder='Confirm New Password'
-						/>
-					</>
-				)}
-				<Button onClick={callback}>Cancel</Button>
-				<Button onClick={updatePassword} type='submit' primary>
-					Update Password
-				</Button>
-			</Form>
-		</>
+		<RenderBasicForm
+			id={formID}
+			inputs={inputs}
+			values={values}
+			onChange={onChange}
+			onSubmit={onSubmit}
+			isLoading={isLoading}
+			emptyInputErrors={emptyInputErrors}
+			errors={errors}
+			buttons={() => (
+				<>
+					<Button onClick={callback}>Cancel</Button>
+					<Button onClick={updatePassword} type='submit' primary>
+						Update Password
+					</Button>
+				</>
+			)}
+		/>
 	);
 }

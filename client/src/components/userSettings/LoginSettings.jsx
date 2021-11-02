@@ -1,57 +1,73 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 //~~~  Other Package Imports
 import { Button, Grid } from 'semantic-ui-react';
+import { useQuery } from '@apollo/client';
 
 //~~~  Local Components
 import { BasicCard, FormModal, UpdatePasswordForm, UpdateAuthEmailForm, Loader } from '../';
+import { AuthContext } from '../../contexts/';
+
+//~~~ GQL
+import { GET_USER } from '../../gql/';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-export default function LoginSettings({ loading, user }) {
-	const methodOfAuthentication = (() => {
-		if (user.facebookId) return 'facebook';
-		if (user.googleId) return 'google';
-		if (user.spotifyId) return 'spotify';
+export default function LoginSettings() {
+	const { userId } = useContext(AuthContext);
+	console.log('Login settings mounted');
 
-		return 'local';
-	})();
+	const { loading, data } = useQuery(GET_USER, {
+		variables: {
+			userId,
+		},
+		onError: (err) => {
+			console.log(err);
+		},
+	});
 
-	return (() => {
-		switch (methodOfAuthentication) {
-			case 'google':
-			case 'facebook':
-			case 'spotify':
-				return <OAuthInfo user={user} loading={loading} method={methodOfAuthentication} />;
-			default:
-				return <LocalAuthSettings user={user} loading={loading} />;
+	const authMethod = () => {
+		const user = data.getUser;
+		if (user) {
+			if (user.facebookId) return 'facebook';
+			if (user.googleId) return 'google';
+			if (user.spotifyId) return 'spotify';
+			return 'local';
 		}
-	})();
+	};
+
+	return loading ? (
+		<Loader />
+	) : authMethod() === 'local' ? (
+		<LocalAuthSettings user={data.getUser} />
+	) : (
+		<OAuthInfo user={data.getUser} method={authMethod()} />
+	);
 }
 
 /**
  * ----> LOCAL COMPONENTS
  */
 
-function OAuthInfo({ user, method, loading }) {
-	return !loading ? (
+function OAuthInfo({ method, user }) {
+	return (
 		<div>
 			<p>{`You registered ${user.email} using ${method}.`}</p>
 		</div>
-	) : null;
+	);
 }
 
-function LocalAuthSettings({ user, loading }) {
+function LocalAuthSettings({ user }) {
 	const [isUpdatingPassword, setIsUpdatingPassword] = useState(false);
 	const [isUpdatingInfo, setIsUpdatingInfo] = useState(false);
+
+	console.log('auth local auth settings mounted');
 
 	return (
 		<>
 			<BasicCard centerSelf title={'Login Settings'}>
 				<Grid>
-					<Grid.Column width={16}>
-						{loading ? <Loader /> : <p>Email Address: {user.email}</p>}
-					</Grid.Column>
+					<Grid.Column width={16}>{<p>Email Address: {user.email}</p>}</Grid.Column>
 
 					<Grid.Column width={9}>
 						<Button size='tiny' onClick={() => setIsUpdatingPassword(true)}>
@@ -71,6 +87,7 @@ function LocalAuthSettings({ user, loading }) {
 				isOpen={isUpdatingPassword}
 				setIsOpen={setIsUpdatingPassword}
 				size='tiny'
+				userEmail={user.email}
 			/>
 			<FormModal
 				header='UpdateInfo'
@@ -78,7 +95,7 @@ function LocalAuthSettings({ user, loading }) {
 				isOpen={isUpdatingInfo}
 				setIsOpen={setIsUpdatingInfo}
 				size='tiny'
-				user={!loading ? user : null}
+				user={user}
 			/>
 		</>
 	);

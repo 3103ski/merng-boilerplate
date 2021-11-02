@@ -4,10 +4,10 @@ import React, { useContext } from 'react';
 import { useForm } from '../../../hooks';
 
 //~~ Package Imports
-import { Form, Button } from 'semantic-ui-react';
+import { Button } from 'semantic-ui-react';
 
 //~~ Local App Components
-import { Loader } from '../../../components/';
+import { RenderBasicForm } from '../../../components/';
 import { GoogleLoginButton, FacebookLoginButton, SpotifyLoginButton } from '../oAuthButtons/';
 
 //~~ Variables + Contexts
@@ -15,47 +15,45 @@ import { AuthContext } from '../../../contexts/auth';
 import { LOCAL_AUTH } from '../../../routes';
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+const inputs = [
+	{ name: 'email', type: 'email', placeholder: 'Email' },
+	{ name: 'password', type: 'password', placeholder: 'Password' },
+];
+
 export default function LoginForm({ history }) {
-	const { isLoading, authRegisterApi } = useContext(AuthContext);
-	const {
-		values: { email, password },
-		onSubmit,
-		onChange,
-	} = useForm(loginInit, {
-		email: '',
-		password: '',
+	// form uses authRegisterApi and not GQL query
+	const { isLoading, authRegisterApi, errors, clearErrors, authError } = useContext(AuthContext);
+
+	/** setup useForm hook */
+	const { values, onSubmit, onChange, emptyInputErrors } = useForm(loginInit, null, {
+		onChangeCB: clearErrors,
+		setErrors: authError,
+		formArray: inputs, // pass inputs since no initial value
 	});
 
 	function loginInit() {
-		authRegisterApi({ authEndpoint: LOCAL_AUTH, data: { email, password } }, history);
+		return authRegisterApi({ authEndpoint: LOCAL_AUTH, data: values }, history);
 	}
 
 	return (
-		<>
-			<Form onSubmit={onSubmit}>
-				{isLoading ? <Loader loadingText='Logging In' /> : null}
-				<Form.Input
-					type='email'
-					onChange={onChange}
-					value={email}
-					name='email'
-					placeholder='Email'
-				/>
-				<Form.Input
-					type='password'
-					onChange={onChange}
-					value={password}
-					name='password'
-					placeholder='Password'
-				/>
-				<Button type='submit' primary>
-					Login
-				</Button>
-				<GoogleLoginButton history={history} />
-				<SpotifyLoginButton history={history} />
-				<FacebookLoginButton history={history} />
-			</Form>
-			{/* <FormErrors errors={errors} /> */}
-		</>
+		<RenderBasicForm
+			inputs={inputs}
+			values={values}
+			onChange={onChange}
+			onSubmit={onSubmit}
+			isLoading={isLoading}
+			emptyInputErrors={emptyInputErrors}
+			errors={errors}
+			buttons={() => (
+				<>
+					<Button type='submit' primary>
+						Login
+					</Button>
+					<GoogleLoginButton history={history} />
+					<SpotifyLoginButton history={history} />
+					<FacebookLoginButton history={history} />
+				</>
+			)}
+		/>
 	);
 }

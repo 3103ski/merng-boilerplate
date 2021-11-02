@@ -12,6 +12,7 @@ import { GET_USER } from '../../gql/';
 
 export default function UserSettingsPage(props) {
 	const { userId } = useContext(AuthContext);
+
 	const { loading, data } = useQuery(GET_USER, {
 		variables: {
 			userId,
@@ -31,7 +32,7 @@ export default function UserSettingsPage(props) {
 				/>
 				<Route
 					path={`${USER_SETTINGS}${SETTINGS_LOGIN_INFO}`}
-					render={() => <LoginSettings user={data.getUser} loading={loading} />}
+					render={() => <LoginSettings userId={userId} />}
 				/>
 			</Switch>
 		</Container>
